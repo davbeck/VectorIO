@@ -177,7 +177,8 @@ class SVGParserTests: XCTestCase {
 	func testParseLine() throws {
 		let data = """
         <svg height="210" width="500">
-        <line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+        <line x1="0" y1="0" x2="200" y2="200"
+        style="stroke:rgb(255,0,0);stroke-width:2" />
         </svg>
         """.data(using: .utf8)!
 		
@@ -192,6 +193,60 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.style, CSSStyle(
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
 			strokeWidth: 2
+		))
+	}
+	
+	
+	// MARK - Polygon
+	
+	func testParsePolygon() throws {
+		let data = """
+        <svg height="210" width="500">
+        <polygon points="200,10 250,190 160,210"
+        style="fill:lime" />
+        </svg>
+        """.data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 500, height: 210))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPolygon else { XCTFail(); return }
+		XCTAssertEqual(element.points, [
+			CGPoint(x: 200, y: 10),
+			CGPoint(x: 250, y: 190),
+			CGPoint(x: 160, y: 210),
+		])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1)
+		))
+	}
+	
+	func testParseEvenOddPolygon() throws {
+		let data = """
+        <svg height="210" width="500">
+        <polygon points="100,10 40,198 190,78 10,78 160,198"
+        style="fill:lime;fill-rule:evenodd;" />
+        </svg>
+        """.data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 500, height: 210))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPolygon else { XCTFail(); return }
+		XCTAssertEqual(element.points, [
+			CGPoint(x: 100, y: 10),
+			CGPoint(x: 40, y: 198),
+			CGPoint(x: 190, y: 78),
+			CGPoint(x: 10, y: 78),
+			CGPoint(x: 160, y: 198),
+		])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1),
+			fillRule: .evenOdd
 		))
 	}
 }

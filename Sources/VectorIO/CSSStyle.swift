@@ -14,6 +14,7 @@ public struct CSSStyle: Hashable {
 	var strokeWidth: CGFloat?
 	var strokeOpacity: CGFloat?
 	var opacity: CGFloat?
+	var fillRule: FillRule?
 	
 	
 	public init(
@@ -22,7 +23,8 @@ public struct CSSStyle: Hashable {
 		stroke: CGColor? = nil,
 		strokeWidth: CGFloat? = nil,
 		strokeOpacity: CGFloat? = nil,
-		opacity: CGFloat? = nil
+		opacity: CGFloat? = nil,
+		fillRule: FillRule? = nil
 	) {
 		self.fill = fill
 		self.fillOpacity = fillOpacity
@@ -30,6 +32,7 @@ public struct CSSStyle: Hashable {
 		self.strokeWidth = strokeWidth
 		self.strokeOpacity = strokeOpacity
 		self.opacity = opacity
+		self.fillRule = fillRule
 	}
 	
 	public init(definition: String) throws {
@@ -37,8 +40,11 @@ public struct CSSStyle: Hashable {
 			.components(separatedBy: ";")
 		
 		for ruleDefinition in ruleDefinitions {
+			guard !ruleDefinition.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
 			let parts = ruleDefinition.components(separatedBy: ":")
-			guard parts.count == 2 else { throw Error.invalidRuleDefinition(ruleDefinition) }
+			guard parts.count == 2 else {
+				throw Error.invalidRuleDefinition(ruleDefinition)
+			}
 			let name = parts[0].trimmingCharacters(in: .whitespacesAndNewlines)
 			let value = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
 			
@@ -55,6 +61,8 @@ public struct CSSStyle: Hashable {
 				self.strokeOpacity = try CGFloat.parse(value)
 			case "opacity":
 				self.opacity = try CGFloat.parse(value)
+			case "fill-rule":
+				self.fillRule = FillRule(rawValue: value)
 			default:
 				print("unrecognized style rule \(ruleDefinition)")
 			}
@@ -85,6 +93,9 @@ public struct CSSStyle: Hashable {
 		}
 		if let opacity = other.opacity {
 			self.opacity = opacity
+		}
+		if let fillRule = other.fillRule {
+			self.fillRule = fillRule
 		}
 	}
 }

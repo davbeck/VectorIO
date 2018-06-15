@@ -53,6 +53,8 @@ extension SVGParser: XMLParserDelegate {
 				try parseEllipse(attributes: attributes)
 			case "line":
 				try parseLine(attributes: attributes)
+			case "polygon":
+				try parsePolygon(attributes: attributes)
 			default:
 				print("unrecognized element \(elementName)")
 			}
@@ -175,6 +177,25 @@ extension SVGParser: XMLParserDelegate {
 				element.end.x = try CGFloat.parse(value)
 			case "y2":
 				element.end.y = try CGFloat.parse(value)
+			case "style":
+				element.style = try CSSStyle(definition: value)
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		svg.elements.append(element)
+	}
+	
+	fileprivate func parsePolygon(attributes: [String : String]) throws {
+		var element = SVGPolygon()
+		
+		for (name, value) in attributes {
+			switch name {
+			case "points":
+				element.points = try value
+					.components(separatedBy: .whitespacesAndNewlines)
+					.map({ try CGPoint.parse($0) })
 			case "style":
 				element.style = try CSSStyle(definition: value)
 			default:

@@ -15,6 +15,23 @@ extension CGFloat {
 }
 
 
+public struct CGPointParseError: Swift.Error {
+	let value: String
+}
+
+extension CGPoint {
+	public static func parse<S: StringProtocol>(_ value: S) throws -> CGPoint {
+		let parts = value.split(separator: ",")
+		guard parts.count == 2 else { throw CGPointParseError(value: String(value)) }
+		
+		let x = try CGFloat.parse(parts[0])
+		let y = try CGFloat.parse(parts[1])
+		
+		return CGPoint(x: x, y: y)
+	}
+}
+
+
 // https://github.com/bahamas10/css-color-names/blob/master/css-color-names.json
 private let colorNames = [
     "aliceblue": "#f0f8ff",
