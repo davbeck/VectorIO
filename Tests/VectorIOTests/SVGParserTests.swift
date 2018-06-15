@@ -249,4 +249,37 @@ class SVGParserTests: XCTestCase {
 			fillRule: .evenOdd
 		))
 	}
+	
+	
+	// MARK - Polyline
+	
+	func testParsePolyline() throws {
+		let data = """
+        <svg height="180" width="500">
+        <polyline points="0,40 40,40 40,80 80,80 80,120 120,120 120,160"
+        style="fill:white;stroke:red;stroke-width:4" />
+        </svg>
+        """.data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 500, height: 180))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPolyline else { XCTFail(); return }
+		XCTAssertEqual(element.points, [
+			CGPoint(x: 0, y: 40),
+			CGPoint(x: 40, y: 40),
+			CGPoint(x: 40, y: 80),
+			CGPoint(x: 80, y: 80),
+			CGPoint(x: 80, y: 120),
+			CGPoint(x: 120, y: 120),
+			CGPoint(x: 120, y: 160),
+		])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 1, green: 1, blue: 1, alpha: 1),
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			strokeWidth: 4
+		))
+	}
 }
