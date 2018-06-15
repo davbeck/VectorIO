@@ -76,11 +76,11 @@ extension SVGParser: XMLParserDelegate {
     fileprivate func parseElementAttribute<E: SVGElement>(name: String, value: String, for element: inout E) throws {
         switch name {
         case "stroke":
-            try element.style.rules.append(.stroke(CGColor.parse(value)))
+            element.style.stroke = try CGColor.parse(value)
         case "stroke-width":
-            try element.style.rules.append(.strokeWidth(CGFloat.parse(value)))
+            element.style.strokeWidth = try CGFloat.parse(value)
         case "fill":
-            try element.style.rules.append(.fill(CGColor.parse(value)))
+            element.style.fill = try CGColor.parse(value)
         default:
             print("unrecognized attribute \(name)=\(value) on \(E.elementName)")
         }

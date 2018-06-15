@@ -2,21 +2,41 @@ import Foundation
 import CoreGraphics
 
 
-public struct CSSStyle {
+public struct CSSStyle: Hashable {
     public enum Error: Swift.Error {
         case invalidRuleDefinition(String)
     }
     
-    
-    public enum Rule: Hashable {
-		case fill(CGColor)
-		case strokeWidth(CGFloat)
-		case stroke(CGColor)
-        case fillOpacity(CGFloat)
-        case strokeOpacity(CGFloat)
-        case opacity(CGFloat)
+	
+	var fill: CGColor? = nil
+	var fillOpacity: CGFloat = 1
+	var stroke: CGColor? = nil
+	var strokeWidth: CGFloat = 0
+	var strokeOpacity: CGFloat = 1
+	var opacity: CGFloat = 1
+	
+	
+	public init(
+		fill: CGColor? = nil,
+		fillOpacity: CGFloat = 1,
+		stroke: CGColor? = nil,
+		strokeWidth: CGFloat = 0,
+		strokeOpacity: CGFloat = 1,
+		opacity: CGFloat = 1
+	) {
+		self.fill = fill
+		self.fillOpacity = fillOpacity
+		self.stroke = stroke
+		self.strokeWidth = strokeWidth
+		self.strokeOpacity = strokeOpacity
+		self.opacity = opacity
+	}
+	
+	public init(definition: String) throws {
+		let ruleDefinitions = definition
+			.components(separatedBy: ";")
 		
-		public init?(ruleDefinition: String) throws {
+		for ruleDefinition in ruleDefinitions {
 			let parts = ruleDefinition.components(separatedBy: ":")
 			guard parts.count == 2 else { throw Error.invalidRuleDefinition(ruleDefinition) }
 			let name = parts[0].trimmingCharacters(in: .whitespacesAndNewlines)
@@ -24,34 +44,20 @@ public struct CSSStyle {
 			
 			switch name.lowercased() {
 			case "fill":
-				self = try .fill(CGColor.parse(value))
+				self.fill = try CGColor.parse(value)
 			case "stroke-width":
-				self = try .strokeWidth(CGFloat.parse(value))
+				self.strokeWidth = try CGFloat.parse(value)
 			case "stroke":
-				self = try .stroke(CGColor.parse(value))
-            case "fill-opacity":
-                self = try .fillOpacity(CGFloat.parse(value))
-            case "stroke-opacity":
-                self = try .strokeOpacity(CGFloat.parse(value))
-            case "opacity":
-                self = try .opacity(CGFloat.parse(value))
+				self.stroke = try CGColor.parse(value)
+			case "fill-opacity":
+				self.fillOpacity = try CGFloat.parse(value)
+			case "stroke-opacity":
+				self.strokeOpacity = try CGFloat.parse(value)
+			case "opacity":
+				self.opacity = try CGFloat.parse(value)
 			default:
 				print("unrecognized style rule \(ruleDefinition)")
-				return nil
 			}
 		}
-	}
-	
-	public var rules: Array<Rule>
-	
-	
-	public init(rules: Array<Rule> = []) {
-		self.rules = rules
-	}
-	
-	public init(definition: String) throws {
-		self.rules = try definition
-			.components(separatedBy: ";")
-			.compactMap({ try Rule(ruleDefinition: $0) })
 	}
 }
