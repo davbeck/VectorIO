@@ -8,21 +8,21 @@ public struct CSSStyle: Hashable {
     }
     
 	
-	var fill: CGColor? = nil
-	var fillOpacity: CGFloat = 1
-	var stroke: CGColor? = nil
-	var strokeWidth: CGFloat = 0
-	var strokeOpacity: CGFloat = 1
-	var opacity: CGFloat = 1
+	var fill: CGColor?
+	var fillOpacity: CGFloat?
+	var stroke: CGColor?
+	var strokeWidth: CGFloat?
+	var strokeOpacity: CGFloat?
+	var opacity: CGFloat?
 	
 	
 	public init(
 		fill: CGColor? = nil,
-		fillOpacity: CGFloat = 1,
+		fillOpacity: CGFloat? = nil,
 		stroke: CGColor? = nil,
-		strokeWidth: CGFloat = 0,
-		strokeOpacity: CGFloat = 1,
-		opacity: CGFloat = 1
+		strokeWidth: CGFloat? = nil,
+		strokeOpacity: CGFloat? = nil,
+		opacity: CGFloat? = nil
 	) {
 		self.fill = fill
 		self.fillOpacity = fillOpacity
@@ -58,6 +58,33 @@ public struct CSSStyle: Hashable {
 			default:
 				print("unrecognized style rule \(ruleDefinition)")
 			}
+		}
+	}
+	
+	public func merging(_ other: CSSStyle) -> CSSStyle {
+		var new = self
+		new.merge(other)
+		return new
+	}
+	
+	public mutating func merge(_ other: CSSStyle) {
+		if let fill = other.fill {
+			self.fill = fill
+		}
+		if let fillOpacity = other.fillOpacity {
+			self.fillOpacity = fillOpacity
+		}
+		if let stroke = other.stroke {
+			self.stroke = stroke
+		}
+		if let strokeWidth = other.strokeWidth {
+			self.strokeWidth = strokeWidth
+		}
+		if let strokeOpacity = other.strokeOpacity {
+			self.strokeOpacity = strokeOpacity
+		}
+		if let opacity = other.opacity {
+			self.opacity = opacity
 		}
 	}
 }

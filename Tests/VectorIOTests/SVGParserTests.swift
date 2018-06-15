@@ -4,7 +4,7 @@ import VectorIO
 
 class SVGParserTests: XCTestCase {
     // MARK - Rect
-    
+	
 	func testParseRect() throws {
 		let data = """
 		<svg width="400" height="110">
@@ -17,7 +17,28 @@ class SVGParserTests: XCTestCase {
 		
 		XCTAssertEqual(svg.size, CGSize(width: 400, height: 110))
 		XCTAssertEqual(svg.elements.count, 1)
-        guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
+		guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
+		XCTAssertEqual(element.frame, CGRect(x: 0, y: 0, width: 300, height: 100))
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
+			strokeWidth: 3
+		))
+	}
+	
+	func testParseRectWithConflictingStyles() throws {
+		let data = """
+		<svg width="400" height="110">
+		<rect width="300" height="100" fill="#ff0000" stroke="#00ff00" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 400, height: 110))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
 		XCTAssertEqual(element.frame, CGRect(x: 0, y: 0, width: 300, height: 100))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
