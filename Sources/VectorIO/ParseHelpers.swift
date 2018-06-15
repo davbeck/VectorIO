@@ -1,10 +1,3 @@
-//
-//  ParseHelpers.swift
-//  VectorIO
-//
-//  Created by David Beck on 6/14/18.
-//
-
 import Foundation
 
 
