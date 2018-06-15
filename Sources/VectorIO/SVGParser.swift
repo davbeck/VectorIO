@@ -51,6 +51,8 @@ extension SVGParser: XMLParserDelegate {
 				try parseCircle(attributes: attributes)
 			case "ellipse":
 				try parseEllipse(attributes: attributes)
+			case "line":
+				try parseLine(attributes: attributes)
 			default:
 				print("unrecognized element \(elementName)")
 			}
@@ -116,6 +118,27 @@ extension SVGParser: XMLParserDelegate {
         svg.elements.append(element)
     }
 	
+	fileprivate func parseCircle(attributes: [String : String]) throws {
+		var element = SVGCircle()
+		
+		for (name, value) in attributes {
+			switch name {
+			case "cx":
+				element.center.x = try CGFloat.parse(value)
+			case "cy":
+				element.center.y = try CGFloat.parse(value)
+			case "r":
+				element.radius = try CGFloat.parse(value)
+			case "style":
+				element.style = try CSSStyle(definition: value)
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		svg.elements.append(element)
+	}
+	
 	fileprivate func parseEllipse(attributes: [String : String]) throws {
 		var element = SVGEllipse()
 		
@@ -139,17 +162,19 @@ extension SVGParser: XMLParserDelegate {
 		svg.elements.append(element)
 	}
 	
-	fileprivate func parseCircle(attributes: [String : String]) throws {
-		var element = SVGCircle()
+	fileprivate func parseLine(attributes: [String : String]) throws {
+		var element = SVGLine()
 		
 		for (name, value) in attributes {
 			switch name {
-			case "cx":
-				element.center.x = try CGFloat.parse(value)
-			case "cy":
-				element.center.y = try CGFloat.parse(value)
-			case "r":
-				element.radius = try CGFloat.parse(value)
+			case "x1":
+				element.start.x = try CGFloat.parse(value)
+			case "y1":
+				element.start.y = try CGFloat.parse(value)
+			case "x2":
+				element.end.x = try CGFloat.parse(value)
+			case "y2":
+				element.end.y = try CGFloat.parse(value)
 			case "style":
 				element.style = try CSSStyle(definition: value)
 			default:

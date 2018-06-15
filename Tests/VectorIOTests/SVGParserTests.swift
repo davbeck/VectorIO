@@ -170,4 +170,28 @@ class SVGParserTests: XCTestCase {
 			opacity: 0.5
 		))
 	}
+	
+	
+	// MARK - Line
+	
+	func testParseLine() throws {
+		let data = """
+        <svg height="210" width="500">
+        <line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+        </svg>
+        """.data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 500, height: 210))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGLine else { XCTFail(); return }
+		XCTAssertEqual(element.start, CGPoint(x: 0, y: 0))
+		XCTAssertEqual(element.end, CGPoint(x: 200, y: 200))
+		XCTAssertEqual(element.style, CSSStyle(
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			strokeWidth: 2
+		))
+	}
 }
