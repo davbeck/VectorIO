@@ -47,8 +47,10 @@ extension SVGParser: XMLParserDelegate {
 				try parseSVG(attributes: attributes)
             case "rect":
                 try parseRect(attributes: attributes)
-            case "circle":
-                try parseCircle(attributes: attributes)
+			case "circle":
+				try parseCircle(attributes: attributes)
+			case "ellipse":
+				try parseEllipse(attributes: attributes)
 			default:
 				print("unrecognized element \(elementName)")
 			}
@@ -110,25 +112,48 @@ extension SVGParser: XMLParserDelegate {
         
         svg.elements.append(element)
     }
-    
-    fileprivate func parseCircle(attributes: [String : String]) throws {
-        var element = SVGCircle()
-        
-        for (name, value) in attributes {
-            switch name {
-            case "cx":
-                element.center.x = try CGFloat.parse(value)
-            case "cy":
-                element.center.y = try CGFloat.parse(value)
-            case "r":
-                element.radius = try CGFloat.parse(value)
-            case "style":
-                element.style = try CSSStyle(definition: value)
-            default:
-                try parseElementAttribute(name: name, value: value, for: &element)
-            }
-        }
-        
-        svg.elements.append(element)
-    }
+	
+	fileprivate func parseEllipse(attributes: [String : String]) throws {
+		var element = SVGEllipse()
+		
+		for (name, value) in attributes {
+			switch name {
+			case "cx":
+				element.center.x = try CGFloat.parse(value)
+			case "cy":
+				element.center.y = try CGFloat.parse(value)
+			case "rx":
+				element.radius.width = try CGFloat.parse(value)
+			case "ry":
+				element.radius.height = try CGFloat.parse(value)
+			case "style":
+				element.style = try CSSStyle(definition: value)
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		svg.elements.append(element)
+	}
+	
+	fileprivate func parseCircle(attributes: [String : String]) throws {
+		var element = SVGCircle()
+		
+		for (name, value) in attributes {
+			switch name {
+			case "cx":
+				element.center.x = try CGFloat.parse(value)
+			case "cy":
+				element.center.y = try CGFloat.parse(value)
+			case "r":
+				element.radius = try CGFloat.parse(value)
+			case "style":
+				element.style = try CSSStyle(definition: value)
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		svg.elements.append(element)
+	}
 }
