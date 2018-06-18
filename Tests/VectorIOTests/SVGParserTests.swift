@@ -391,4 +391,43 @@ class SVGParserTests: XCTestCase {
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
 		))
 	}
+	
+	
+	// MARK - ViewBox
+	
+	func testViewBoxWithoutSize() throws {
+		let data = """
+		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
+		XCTAssertEqual(svg.viewBox, CGRect(x: 0, y: 0, width: 100, height: 100))
+	}
+	
+	func testSizeWithoutViewBox() throws {
+		let data = """
+		<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
+		XCTAssertEqual(svg.viewBox, CGRect(x: 0, y: 0, width: 100, height: 100))
+	}
+	
+	func testSizeAndViewBox() throws {
+		let data = """
+		<svg width="100" height="100" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
+		XCTAssertEqual(svg.viewBox, CGRect(x: 0, y: 0, width: 200, height: 200))
+	}
 }

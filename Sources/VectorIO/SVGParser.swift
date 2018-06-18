@@ -75,8 +75,31 @@ extension SVGParser: XMLParserDelegate {
 				svg.size.width = try CGFloat.parse(value)
 			case "height":
 				svg.size.height = try CGFloat.parse(value)
+			case "viewBox":
+				var separators = CharacterSet.whitespacesAndNewlines
+				separators.insert(",")
+				let coords = try value.components(separatedBy: separators).compactMap({ try CGFloat.parse($0) })
+				guard coords.count == 4 else { throw ParseError.invalidNumber(String(value)) }
+				
+				svg.viewBox = CGRect(x: coords[0], y: coords[1], width: coords[2], height: coords[3])
 			default:
 				print("unrecognized attribute \(name)=\(value) on svg")
+			}
+		}
+		
+		if attributes.keys.contains("viewBox") {
+			if !attributes.keys.contains("width") {
+				svg.size.width = svg.viewBox.width
+			}
+			if !attributes.keys.contains("height") {
+				svg.size.height = svg.viewBox.height
+			}
+		} else {
+			if attributes.keys.contains("width") {
+				svg.viewBox.size.width = svg.size.width
+			}
+			if attributes.keys.contains("height") {
+				svg.viewBox.size.height = svg.size.height
 			}
 		}
 	}
