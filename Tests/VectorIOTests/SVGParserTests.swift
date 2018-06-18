@@ -15,7 +15,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 400, height: 110))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
 		XCTAssertEqual(element.frame, CGRect(x: 0, y: 0, width: 300, height: 100))
@@ -36,7 +35,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 400, height: 110))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
 		XCTAssertEqual(element.frame, CGRect(x: 0, y: 0, width: 300, height: 100))
@@ -58,7 +56,6 @@ class SVGParserTests: XCTestCase {
         let parser = SVGParser(data: data)
         let svg = try parser.parse()
         
-        XCTAssertEqual(svg.size, CGSize(width: 400, height: 180))
         XCTAssertEqual(svg.elements.count, 1)
         guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
         XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
@@ -82,7 +79,6 @@ class SVGParserTests: XCTestCase {
         let parser = SVGParser(data: data)
         let svg = try parser.parse()
         
-        XCTAssertEqual(svg.size, CGSize(width: 400, height: 180))
         XCTAssertEqual(svg.elements.count, 1)
         guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
         XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
@@ -105,7 +101,6 @@ class SVGParserTests: XCTestCase {
         let parser = SVGParser(data: data)
         let svg = try parser.parse()
         
-        XCTAssertEqual(svg.size, CGSize(width: 400, height: 180))
         XCTAssertEqual(svg.elements.count, 1)
         guard let element = svg.elements.first as? SVGRect else { XCTFail(); return }
         XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
@@ -132,7 +127,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGCircle else { XCTFail(); return }
 		XCTAssertEqual(element.center, CGPoint(x: 50, y: 50))
@@ -158,7 +152,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 500, height: 140))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGEllipse else { XCTFail(); return }
 		XCTAssertEqual(element.center, CGPoint(x: 200, y: 80))
@@ -185,7 +178,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 500, height: 210))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGLine else { XCTFail(); return }
 		XCTAssertEqual(element.start, CGPoint(x: 0, y: 0))
@@ -210,7 +202,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 500, height: 210))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPolygon else { XCTFail(); return }
 		XCTAssertEqual(element.points, [
@@ -234,7 +225,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 500, height: 210))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPolygon else { XCTFail(); return }
 		XCTAssertEqual(element.points, [
@@ -264,7 +254,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 500, height: 180))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPolyline else { XCTFail(); return }
 		XCTAssertEqual(element.points, [
@@ -296,7 +285,6 @@ class SVGParserTests: XCTestCase {
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
 		
-		XCTAssertEqual(svg.size, CGSize(width: 400, height: 210))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(element.definitions, [
@@ -320,7 +308,6 @@ class SVGParserTests: XCTestCase {
 		
 		let svg = try SVGParser(data: data).parse()
 		
-		//		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(element.definitions, [
@@ -348,7 +335,6 @@ class SVGParserTests: XCTestCase {
 		
 		let svg = try SVGParser(data: data).parse()
 		
-		//		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(element.definitions, [
@@ -374,11 +360,9 @@ class SVGParserTests: XCTestCase {
 		   S 70,90 90,90" />
 		</svg>
 		""".data(using: .utf8)!
-		//
 		
 		let svg = try SVGParser(data: data).parse()
 		
-//		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
 		XCTAssertEqual(svg.elements.count, 1)
 		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(element.definitions, [
