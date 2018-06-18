@@ -57,6 +57,8 @@ extension SVGParser: XMLParserDelegate {
 				try parsePolygon(attributes: attributes)
 			case "polyline":
 				try parsePolyline(attributes: attributes)
+			case "path":
+				try parsePath(attributes: attributes)
 			default:
 				print("unrecognized element \(elementName)")
 			}
@@ -226,4 +228,30 @@ extension SVGParser: XMLParserDelegate {
 		
 		svg.elements.append(element)
 	}
+	
+	fileprivate func parsePath(attributes: [String : String]) throws {
+		var element = SVGPath()
+		
+		for (name, value) in attributes {
+			switch name {
+			case "d":
+				element.definitions = try SVGPath.Definition.parse(value)
+			case "style":
+				element.style = try CSSStyle(definition: value)
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		svg.elements.append(element)
+	}
 }
+
+extension Unicode.Scalar {
+	var isWhitespaceOrNewline: Bool {
+		return CharacterSet.whitespacesAndNewlines.contains(self)
+	}
+}
+
+
+

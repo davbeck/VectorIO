@@ -189,8 +189,10 @@ extension CGColor {
 		var error: ParseError {
 			return ParseError.invalidColor(cssColor)
 		}
-        
-        if let namedColor = colorNames[cssColor] {
+		
+		if cssColor == "none" {
+			return CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+		} else if let namedColor = colorNames[cssColor] {
             return try parse(namedColor)
         } else if cssColor.hasPrefix("#") {
 			let hexString = cssColor.dropFirst()

@@ -282,4 +282,113 @@ class SVGParserTests: XCTestCase {
 			strokeWidth: 4
 		))
 	}
+	
+	
+	// MARK - Path
+	
+	func testParsePath() throws {
+		let data = """
+        <svg height="210" width="400">
+        <path d="M150 0 L75 200 L225 200 Z" />
+        </svg>
+        """.data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 400, height: 210))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 150, y: 0)),
+			SVGPath.Definition.lineTo(CGPoint(x: 75, y: 200)),
+			SVGPath.Definition.lineTo(CGPoint(x: 225, y: 200)),
+			SVGPath.Definition.closePath,
+		])
+		XCTAssertEqual(element.style, CSSStyle())
+	}
+	
+	func testParseQuadraticBezierCurve() throws {
+		let data = """
+		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+		<path fill="none" stroke="red"
+		d="M 10,50
+		   Q 25,25 40,50
+		   T 70,50" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		//		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 50)),
+			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 25, y: 25), end: CGPoint(x: 40, y: 50)),
+			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 55, y: 75), end: CGPoint(x: 70, y: 50)),
+			])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+		))
+	}
+	
+	func testParseHeart() throws {
+		let data = """
+		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+		<path fill="none" stroke="red"
+		d="M 10,30
+		A 20,20 0,0,1 50,30
+		A 20,20 0,0,1 90,30
+		Q 90,60 50,90
+		Q 10,60 10,30 z" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		//		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 30)),
+			SVGPath.Definition.arc(radius: CGPoint(x: 20, y: 20), angle: CGFloat(0), isLargeArc: false, isSweep: true, end: CGPoint(x: 50, y: 30)),
+			SVGPath.Definition.arc(radius: CGPoint(x: 20, y: 20), angle: CGFloat(0), isLargeArc: false, isSweep: true, end: CGPoint(x: 90, y: 30)),
+			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 90, y: 60), end: CGPoint(x: 50, y: 90)),
+			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 10, y: 60), end: CGPoint(x: 10, y: 30)),
+			SVGPath.Definition.closePath,
+			])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+		))
+	}
+	
+	func testParseCubicBezierCurve() throws {
+		let data = """
+		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+		<path fill="none" stroke="red"
+		d="M 10,90
+		   C 30,90 30,10 50,10
+		   S 70,90 90,90" />
+		</svg>
+		""".data(using: .utf8)!
+		//
+		
+		let svg = try SVGParser(data: data).parse()
+		
+//		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
+		XCTAssertEqual(svg.elements.count, 1)
+		guard let element = svg.elements.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 90)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 30, y: 90), controlEnd: CGPoint(x: 30, y: 10), end: CGPoint(x: 50, y: 10)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 70, y: 10), controlEnd: CGPoint(x: 70, y: 90), end: CGPoint(x: 90, y: 90)),
+		])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+		))
+	}
 }
