@@ -11,7 +11,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "generate_uiimages",
+            name: "vectoriogen",
             dependencies: [
 				"VectorIO",
 			]
