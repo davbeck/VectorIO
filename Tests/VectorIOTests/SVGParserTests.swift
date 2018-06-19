@@ -316,7 +316,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 55, y: 75), end: CGPoint(x: 70, y: 50)),
 			])
 		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			fill: CGColor.clear,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
 		))
 	}
@@ -346,7 +346,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.closePath,
 			])
 		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			fill: CGColor.clear,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
 		))
 	}
@@ -371,7 +371,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 70, y: 10), controlEnd: CGPoint(x: 70, y: 90), end: CGPoint(x: 90, y: 90)),
 		])
 		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			fill: CGColor.clear,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
 		))
 	}
@@ -489,8 +489,8 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(svg.children.count, 1)
 		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
 		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
-			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			fill: CGColor.clear,
+			stroke: CGColor.clear,
 			strokeWidth: 1,
 			fillRule: .evenOdd
 		))
@@ -500,7 +500,7 @@ class SVGParserTests: XCTestCase {
 		guard let path = element.children[0] as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(path.style, CSSStyle(
 			fill: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			stroke: CGColor.clear,
 			strokeWidth: 1,
 			fillRule: .evenOdd
 		))
