@@ -195,7 +195,7 @@ extension CGColor {
 		}
 		
 		if cssColor == "none" {
-			return CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+			return CGColor.clear
 		} else if let namedColor = colorNames[cssColor] {
             return try parse(namedColor)
         } else if cssColor.hasPrefix("#") {

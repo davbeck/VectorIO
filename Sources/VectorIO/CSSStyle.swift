@@ -8,13 +8,13 @@ public struct CSSStyle: Hashable {
     }
     
 	
-	var fill: CGColor?
-	var fillOpacity: CGFloat?
-	var stroke: CGColor?
-	var strokeWidth: CGFloat?
-	var strokeOpacity: CGFloat?
-	var opacity: CGFloat?
-	var fillRule: FillRule?
+	public var fill: CGColor?
+	public var fillOpacity: CGFloat?
+	public var stroke: CGColor?
+	public var strokeWidth: CGFloat?
+	public var strokeOpacity: CGFloat?
+	public var opacity: CGFloat?
+	public var fillRule: FillRule?
 	
 	
 	public init(

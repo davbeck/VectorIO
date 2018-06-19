@@ -24,6 +24,19 @@ let package = Package(
 		.testTarget(
 			name: "VectorIOTests",
 			dependencies: ["VectorIO"]
+		),
+		.target(
+			name: "VectorIOCodeGen",
+			dependencies: [
+				"VectorIO"
+			]
+		),
+		.testTarget(
+			name: "VectorIOCodeGenTests",
+			dependencies: [
+				"VectorIOCodeGen", 
+				"VectorIO"
+			]
 		)
     ]
 )
