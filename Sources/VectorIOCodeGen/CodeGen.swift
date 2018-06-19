@@ -13,16 +13,61 @@ public protocol UIDrawingCodeGenerator: SVGElement {
     func generateUIDrawingCode() throws -> String
 }
 
-extension SVG {
-    public func generateUIImageCode() throws -> String {
+extension CSSStyle {
+	func generateUIDrawingCode() throws -> String {
+		var code = ""
+		if hasStroke {
+			code += "path.lineWidth = \(strokeWidth ?? 1)\n"
+		}
+		
+		code += """
+		if let tintColor = tintColor {
+			tintColor.set()
+		} else {
+		
+		"""
+		if hasFill, let fill = self.fill {
+			let uiColor = try fill.swiftUIColorDefinition(alpha: fillOpacity ?? 1)
+			code += "\t\(uiColor).setFill()\n"
+		}
+		if hasStroke, let stroke = self.stroke {
+			let uiColor = try stroke.swiftUIColorDefinition(alpha: strokeOpacity ?? 1)
+			code += "\t\(uiColor).setStroke()\n"
+		}
+		code += "}\n"
+		
+		if hasFill {
+			code += "path.fill()\n"
+		}
+		
+		if hasStroke {
+			code += "path.stroke()\n"
+		}
+		
+		return code
+	}
+}
+
+extension SVGParentElement {
+	public func generateUIDrawingCode() throws -> String {
+		return try children
+			.filter({ $0.style.hasFill || $0.style.hasStroke })
+			.compactMap({ $0 as? UIDrawingCodeGenerator })
+			.map({ try "do {\n\t\($0.generateUIDrawingCode())\n}" })
+			.joined(separator: "\n")
+	}
+}
+
+extension SVGGroup: UIDrawingCodeGenerator {}
+
+
+
+extension SVG: UIDrawingCodeGenerator {
+    public func generateUIImageExtension() throws -> String {
         guard !title.isEmpty else { throw CodeGenError.invalidTitle }
         let propertyTitle = title.lowerCamelCased()
         
-        let childrenCode = try children
-            .compactMap({ $0 as? UIDrawingCodeGenerator })
-            .map({ try $0.generateUIDrawingCode() })
-            .joined(separator: "\n")
-            .leftPad(count: 3)
+        let childrenCode = try self.generateUIDrawingCode()
             
         
         return """
@@ -39,7 +84,7 @@ extension SVG {
                 }
         
                 let image = \(propertyTitle)Renderer.image { context in
-        \(childrenCode)
+        \(childrenCode.leftPad(count: 3))
                 }
                 \(propertyTitle)Cache.setObject(image, forKey: key)
                 
@@ -53,28 +98,59 @@ extension SVG {
 extension SVGRect: UIDrawingCodeGenerator {
     public func generateUIDrawingCode() throws -> String {
 		var code = ""
-		code += "do {\n"
-		code += "\tlet path = UIBezierPath(rect: \(frame.swiftDefinition()))\n"
+		code += "let path = UIBezierPath(rect: \(frame.swiftDefinition()))\n"
 		
-		if let strokeWidth = style.strokeWidth {
-			code += "\tpath.lineWidth = \(strokeWidth)\n"
-		}
-		
-		if let fill = style.fill, fill != .clear {
-			let uiColor = try fill.swiftUIColorDefinition(alpha: style.strokeOpacity ?? 1)
-			
-			code += "\t(tintColor ?? \(uiColor)).setFill()\n"
-			code += "\tpath.fill()\n"
-		}
-		
-		if let strokeWidth = style.strokeWidth, strokeWidth > 0, let stroke = style.stroke {
-			let uiColor = try stroke.swiftUIColorDefinition(alpha: style.strokeOpacity ?? 1)
-			
-			code += "\t(tintColor ?? \(uiColor)).setStroke()\n"
-			code += "\tpath.stroke()\n"
-		}
-		code += "}"
+		code += try style.generateUIDrawingCode()
 		
 		return code
     }
+}
+
+extension SVGEllipse: UIDrawingCodeGenerator {
+	public func generateUIDrawingCode() throws -> String {
+		var code = ""
+		code += "let path = UIBezierPath(ovalIn: \(frame.swiftDefinition()))\n"
+		
+		code += try style.generateUIDrawingCode()
+		
+		return code
+	}
+}
+
+extension SVGLine: UIDrawingCodeGenerator {
+	public func generateUIDrawingCode() throws -> String {
+		var code = ""
+		code += "let path = UIBezierPath()\n"
+		code += "path.move(to: \(start.swiftDefinition()))\n"
+		code += "path.addLine(to: \(end.swiftDefinition()))\n"
+		
+		code += try style.generateUIDrawingCode()
+		
+		return code
+	}
+}
+
+extension SVGPath: UIDrawingCodeGenerator {
+	public func generateUIDrawingCode() throws -> String {
+		var code = ""
+		code += "let path = UIBezierPath()\n"
+		for definition in definitions {
+			switch definition {
+			case .moveTo(let point):
+				code += "path.move(to: \(point.swiftDefinition()))\n"
+			case .lineTo(let point):
+				code += "path.addLine(to: \(point.swiftDefinition()))\n"
+			case .quadraticBezierCurve(let control, let end):
+				code += "path.addQuadCurve(to: \(end.swiftDefinition()), controlPoint: \(control.swiftDefinition()))\n"
+			case .cubicBezierCurve(let curve):
+				code += "path.addCurve(to: \(curve.end.swiftDefinition()), controlPoint1: \(curve.controlStart.swiftDefinition()), controlPoint2: \(curve.controlEnd.swiftDefinition()))\n"
+			case .closePath:
+				code += "path.close()\n"
+			}
+		}
+		
+		code += try style.generateUIDrawingCode()
+		
+		return code
+	}
 }

@@ -9,6 +9,10 @@ public struct SVGEllipse: SVGElement {
 	public var radius: CGSize
 	public var style: CSSStyle
 	
+	public var frame: CGRect {
+		return CGRect(x: center.x - radius.width, y: center.y - radius.height, width: radius.width * 2, height: radius.height * 2)
+	}
+	
 	public init(center: CGPoint = .zero, radius: CGSize = .zero, style: CSSStyle = CSSStyle()) {
 		self.center = center
 		self.radius = radius

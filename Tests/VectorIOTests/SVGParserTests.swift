@@ -339,8 +339,10 @@ class SVGParserTests: XCTestCase {
 		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(element.definitions, [
 			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 30)),
-			SVGPath.Definition.arc(radius: CGPoint(x: 20, y: 20), angle: CGFloat(0), isLargeArc: false, isSweep: true, end: CGPoint(x: 50, y: 30)),
-			SVGPath.Definition.arc(radius: CGPoint(x: 20, y: 20), angle: CGFloat(0), isLargeArc: false, isSweep: true, end: CGPoint(x: 90, y: 30)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 41.038300489879994, y: 10.0), controlEnd: CGPoint(x: 50.0, y: 18.961699510119995), end: CGPoint(x: 50.0, y: 29.999999999999996)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 50.0, y: 41.038300489879994), controlEnd: CGPoint(x: 41.03830048988001, y: 50.0), end: CGPoint(x: 30.000000000000007, y: 50.0)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 81.03830048988, y: 10.0), controlEnd: CGPoint(x: 90.0, y: 18.961699510119995), end: CGPoint(x: 90.0, y: 29.999999999999996)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 90.0, y: 41.038300489879994), controlEnd: CGPoint(x: 81.03830048988, y: 50.0), end: CGPoint(x: 70.0, y: 50.0)),
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 90, y: 60), end: CGPoint(x: 50, y: 90)),
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 10, y: 60), end: CGPoint(x: 10, y: 30)),
 			SVGPath.Definition.closePath,

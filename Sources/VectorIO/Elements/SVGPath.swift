@@ -2,6 +2,19 @@ import Foundation
 import CoreGraphics
 
 
+public struct CubicBezierCurve: Equatable {
+	public var controlStart: CGPoint
+	public var controlEnd: CGPoint
+	public var end: CGPoint
+	
+	public init(controlStart: CGPoint, controlEnd: CGPoint, end: CGPoint) {
+		self.controlStart = controlStart
+		self.controlEnd = controlEnd
+		self.end = end
+	}
+}
+
+
 public struct SVGPath: SVGElement {
 	public static let elementName: String = "path"
 	
@@ -14,9 +27,13 @@ public struct SVGPath: SVGElement {
 		case moveTo(CGPoint)
 		case lineTo(CGPoint)
 		case quadraticBezierCurve(control: CGPoint, end: CGPoint)
-		case cubicBezierCurve(controlStart: CGPoint, controlEnd: CGPoint, end: CGPoint)
-		case arc(radius: CGPoint, angle: CGFloat, isLargeArc: Bool, isSweep: Bool, end: CGPoint)
+		case cubicBezierCurve(CubicBezierCurve)
+//		case arc(radius: CGPoint, angle: CGFloat, isLargeArc: Bool, isSweep: Bool, end: CGPoint)
 		case closePath
+		
+		public static func cubicBezierCurve(controlStart: CGPoint, controlEnd: CGPoint, end: CGPoint) -> Definition {
+			return .cubicBezierCurve(CubicBezierCurve(controlStart: controlStart, controlEnd: controlEnd, end: end))
+		}
 		
 		
 		static func parse(_ value: String) throws -> [Definition] {
@@ -95,7 +112,7 @@ public struct SVGPath: SVGElement {
 						x: CGFloat.parse(arguments.removeFirst()),
 						y: CGFloat.parse(arguments.removeFirst())
 					)
-					definitions.append(.cubicBezierCurve(controlStart: controlStart, controlEnd: controlEnd, end: end))
+					definitions.append(.cubicBezierCurve(CubicBezierCurve(controlStart: controlStart, controlEnd: controlEnd, end: end)))
 					currentPoint = end
 					currentControl = controlEnd
 				case "S":
@@ -108,12 +125,14 @@ public struct SVGPath: SVGElement {
 						x: CGFloat.parse(arguments.removeFirst()),
 						y: CGFloat.parse(arguments.removeFirst())
 					)
-					definitions.append(.cubicBezierCurve(controlStart: controlStart, controlEnd: controlEnd, end: end))
+					definitions.append(.cubicBezierCurve(CubicBezierCurve(controlStart: controlStart, controlEnd: controlEnd, end: end)))
 					currentPoint = end
 					currentControl = controlEnd
 				case "A":
-					let rx = try CGFloat.parse(arguments.removeFirst())
-					let ry = try CGFloat.parse(arguments.removeFirst())
+					let radius = try CGSize(
+						width: CGFloat.parse(arguments.removeFirst()),
+						height: CGFloat.parse(arguments.removeFirst())
+					)
 					let angle = try CGFloat.parse(arguments.removeFirst())
 					let isLargeArc = Int(arguments.removeFirst()) == 1
 					let isSweep = Int(arguments.removeFirst()) == 1
@@ -121,7 +140,8 @@ public struct SVGPath: SVGElement {
 						x: CGFloat.parse(arguments.removeFirst()),
 						y: CGFloat.parse(arguments.removeFirst())
 					)
-					definitions.append(.arc(radius: CGPoint(x: rx, y: ry), angle: angle, isLargeArc: isLargeArc, isSweep: isSweep, end: end))
+					definitions += arcToBezier(start: currentPoint, end: end, radius: radius, xAxisRotation: angle, largeArcFlag: isLargeArc, sweepFlag: isSweep)
+					.map({ .cubicBezierCurve($0) })
 					currentPoint = end
 					currentControl = end
 				case "Z":

@@ -16,6 +16,16 @@ public struct CSSStyle: Hashable {
 	public var opacity: CGFloat?
 	public var fillRule: FillRule?
 	
+	public var hasStroke: Bool {
+		guard let stroke = self.stroke else { return false }
+		return stroke != .clear && (strokeWidth ?? 1) > 0
+	}
+	
+	public var hasFill: Bool {
+		guard let fill = self.fill else { return false }
+		return fill != .clear
+	}
+	
 	
 	public init(
 		fill: CGColor? = nil,
