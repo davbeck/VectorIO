@@ -33,6 +33,8 @@ public class SVGParser: NSObject {
 	public convenience init?(contentsOf url: URL) {
 		guard let parser = XMLParser(contentsOf: url) else { return nil }
 		self.init(parser)
+		
+		svg.title = url.deletingPathExtension().lastPathComponent
 	}
 	
 	public convenience init(data: Data) {

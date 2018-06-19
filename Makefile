@@ -2,7 +2,6 @@ MESA_PROTO=$(GOPATH)/src/mesa.ac.st/mrpc/proto/mesa
 
 gen:
 	@swift package generate-xcodeproj
-	@make format
 
 format:
 	@swiftformat ./ \
@@ -28,3 +27,6 @@ format:
 
 test:
 	@swift test
+	
+release: format
+	@swift build --configuration=release -Xswiftc -static-stdlib

@@ -1,15 +1,18 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
 	name: "VectorIO",
-	dependencies: [
-		// Dependencies declare other packages that this package depends on.
-		// .package(url: /* package url */, from: "1.0.0"),
+	products: [
+		.executable(name: "vectorio", targets: ["VectorIOCLI"]),
+		.library(name: "VectorIO", targets: ["VectorIO"]),
+		.library(name: "VectorIOCodeGen", targets: ["VectorIOCodeGen"]),
 	],
 	targets: [
 		.target(
-			name: "vectoriogen",
+			name: "VectorIOCLI",
 			dependencies: [
+				"VectorIOCodeGen",
 				"VectorIO",
 			]
 		),
