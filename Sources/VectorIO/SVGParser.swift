@@ -3,8 +3,25 @@ import CoreGraphics
 
 
 public class SVGParser: NSObject {
+	public enum Error: Swift.Error {
+		case missingSVGElement
+	}
+	
 	fileprivate let xmlParser: XMLParser
 	fileprivate var svg = SVG()
+	fileprivate var parents: Array<SVGParentElement> = []
+	fileprivate var currentParent: SVGParentElement {
+		get {
+			return parents.last ?? svg
+		}
+		set {
+			if let index = parents.indices.last {
+				parents[index] = newValue
+			} else if let newValue = newValue as? SVG {
+				svg = newValue
+			}
+		}
+	}
 	
 	private init(_ parser: XMLParser) {
 		xmlParser = parser
@@ -59,6 +76,8 @@ extension SVGParser: XMLParserDelegate {
 				try parsePolyline(attributes: attributes)
 			case "path":
 				try parsePath(attributes: attributes)
+			case SVGGroup.elementName:
+				try parseGroup(attributes: attributes)
 			default:
 				print("unrecognized element \(elementName)")
 			}
@@ -66,6 +85,12 @@ extension SVGParser: XMLParserDelegate {
 			self.error = error
 			xmlParser.abortParsing()
 		}
+	}
+	
+	public func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+		guard let element = parents.last, type(of: element).elementName == elementName else { return }
+		parents.removeLast()
+		currentParent.append(element)
 	}
 	
 	fileprivate func parseSVG(attributes: [String : String]) throws {
@@ -83,7 +108,7 @@ extension SVGParser: XMLParserDelegate {
 				
 				svg.viewBox = CGRect(x: coords[0], y: coords[1], width: coords[2], height: coords[3])
 			default:
-				print("unrecognized attribute \(name)=\(value) on svg")
+				try parseElementAttribute(name: name, value: value, for: &svg)
 			}
 		}
 		
@@ -115,6 +140,10 @@ extension SVGParser: XMLParserDelegate {
         case "fill":
 			element.style = try CSSStyle(fill: CGColor.parse(value))
 				.merging(element.style)
+			
+		case "style":
+			try element.style.merge(CSSStyle(definition: value))
+			
         default:
             print("unrecognized attribute \(name)=\(value) on \(E.elementName)")
         }
@@ -137,18 +166,16 @@ extension SVGParser: XMLParserDelegate {
                 element.radiusX = try CGFloat.parse(value)
             case "ry":
                 element.radiusY = try CGFloat.parse(value)
-            case "style":
-                try element.style.merge(CSSStyle(definition: value))
             default:
                 try parseElementAttribute(name: name, value: value, for: &element)
             }
         }
-        
-        svg.elements.append(element)
+		
+        currentParent.append(element)
     }
 	
 	fileprivate func parseCircle(attributes: [String : String]) throws {
-		var element = SVGCircle()
+		var element = SVGEllipse()
 		
 		for (name, value) in attributes {
 			switch name {
@@ -157,15 +184,14 @@ extension SVGParser: XMLParserDelegate {
 			case "cy":
 				element.center.y = try CGFloat.parse(value)
 			case "r":
-				element.radius = try CGFloat.parse(value)
-			case "style":
-				element.style = try CSSStyle(definition: value)
+				let radius = try CGFloat.parse(value)
+				element.radius = CGSize(width: radius, height: radius)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
 		
-		svg.elements.append(element)
+		currentParent.append(element)
 	}
 	
 	fileprivate func parseEllipse(attributes: [String : String]) throws {
@@ -181,14 +207,12 @@ extension SVGParser: XMLParserDelegate {
 				element.radius.width = try CGFloat.parse(value)
 			case "ry":
 				element.radius.height = try CGFloat.parse(value)
-			case "style":
-				element.style = try CSSStyle(definition: value)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
 		
-		svg.elements.append(element)
+		currentParent.append(element)
 	}
 	
 	fileprivate func parseLine(attributes: [String : String]) throws {
@@ -204,14 +228,12 @@ extension SVGParser: XMLParserDelegate {
 				element.end.x = try CGFloat.parse(value)
 			case "y2":
 				element.end.y = try CGFloat.parse(value)
-			case "style":
-				element.style = try CSSStyle(definition: value)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
 		
-		svg.elements.append(element)
+		currentParent.append(element)
 	}
 	
 	fileprivate func parsePolygon(attributes: [String : String]) throws {
@@ -223,14 +245,12 @@ extension SVGParser: XMLParserDelegate {
 				element.points = try value
 					.components(separatedBy: .whitespacesAndNewlines)
 					.map({ try CGPoint.parse($0) })
-			case "style":
-				element.style = try CSSStyle(definition: value)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
 		
-		svg.elements.append(element)
+		currentParent.append(element)
 	}
 	
 	fileprivate func parsePolyline(attributes: [String : String]) throws {
@@ -242,14 +262,12 @@ extension SVGParser: XMLParserDelegate {
 				element.points = try value
 					.components(separatedBy: .whitespacesAndNewlines)
 					.map({ try CGPoint.parse($0) })
-			case "style":
-				element.style = try CSSStyle(definition: value)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
 		
-		svg.elements.append(element)
+		currentParent.append(element)
 	}
 	
 	fileprivate func parsePath(attributes: [String : String]) throws {
@@ -259,14 +277,25 @@ extension SVGParser: XMLParserDelegate {
 			switch name {
 			case "d":
 				element.definitions = try SVGPath.Definition.parse(value)
-			case "style":
-				element.style = try CSSStyle(definition: value)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
 		
-		svg.elements.append(element)
+		currentParent.append(element)
+	}
+	
+	fileprivate func parseGroup(attributes: [String : String]) throws {
+		var element = SVGGroup()
+		
+		for (name, value) in attributes {
+			switch name {
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		parents.append(element)
 	}
 }
 
