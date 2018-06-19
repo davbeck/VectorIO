@@ -137,8 +137,11 @@ extension SVGParser: XMLParserDelegate {
         case "stroke-width":
 			element.style = try CSSStyle(strokeWidth: CGFloat.parse(value))
 				.merging(element.style)
-        case "fill":
+		case "fill":
 			element.style = try CSSStyle(fill: CGColor.parse(value))
+				.merging(element.style)
+		case "fill-rule":
+			element.style = CSSStyle(fillRule: FillRule(rawValue: value))
 				.merging(element.style)
 			
 		case "style":

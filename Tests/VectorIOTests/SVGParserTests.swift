@@ -466,4 +466,43 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(svg.size, CGSize(width: 14, height: 14))
 		XCTAssertEqual(svg.viewBox, CGRect(x: 0, y: 0, width: 14, height: 14))
 	}
+	
+	
+	// MARK - Example SVGs
+	
+	func testTag() throws {
+		let data = """
+		<?xml version="1.0" encoding="UTF-8"?>
+		<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+			<title>tag</title>
+			<desc>Created with Sketch.</desc>
+			<defs></defs>
+			<g id="tag" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+				<path d="M6.22780584,1.22780584 L12.9500281,7.95002806 C13.2537692,8.25376917 13.2537692,8.74623083 12.9500281,9.04997194 L9.04997194,12.9500281 C8.74623083,13.2537692 8.25376917,13.2537692 7.95002806,12.9500281 L1.22780584,6.22780584 C1.08194421,6.08194421 1,5.88411339 1,5.6778339 L1,1.77777778 C1,1.34822297 1.34822297,1 1.77777778,1 L5.6778339,1 C5.88411339,1 6.08194421,1.08194421 6.22780584,1.22780584 Z M3.5,4.66666667 C4.14433221,4.66666667 4.66666667,4.14433221 4.66666667,3.5 C4.66666667,2.85566779 4.14433221,2.33333333 3.5,2.33333333 C2.85566779,2.33333333 2.33333333,2.85566779 2.33333333,3.5 C2.33333333,4.14433221 2.85566779,4.66666667 3.5,4.66666667 Z" id="Combined-Shape" fill="#ff0000"></path>
+			</g>
+		</svg>
+		""".data(using: .utf8)!
+
+		let svg = try SVGParser(data: data).parse()
+
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			strokeWidth: 1,
+			fillRule: .evenOdd
+		))
+		
+		guard element.children.count == 1 else { XCTFail(); return }
+		
+		guard let path = element.children[0] as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(path.style, CSSStyle(
+			fill: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 0),
+			strokeWidth: 1,
+			fillRule: .evenOdd
+		))
+	}
 }
