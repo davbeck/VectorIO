@@ -4,13 +4,13 @@ import CoreGraphics
 
 
 public enum CodeGenError: Swift.Error {
-    case invalidTitle
+	case invalidTitle
 	case invalidColor
 }
 
 
 public protocol UIDrawingCodeGenerator: SVGElement {
-    func generateUIDrawingCode() throws -> String
+	func generateUIDrawingCode() throws -> String
 }
 
 extension CSSStyle {
@@ -63,47 +63,47 @@ extension SVGGroup: UIDrawingCodeGenerator {}
 
 
 extension SVG: UIDrawingCodeGenerator {
-    public func generateUIImageExtension() throws -> String {
-        guard !title.isEmpty else { throw CodeGenError.invalidTitle }
-        let propertyTitle = title.lowerCamelCased()
-        
-        let childrenCode = try self.generateUIDrawingCode()
-            
-        
-        return """
-        import UIKit
-        
-        extension UIImage {
-            private static let \(propertyTitle)Cache = NSCache<AnyObject, UIImage>()
-            private static let \(propertyTitle)Renderer = UIGraphicsImageRenderer(size: CGSize(width: 400, height: 110))
-        
-            static func \(propertyTitle)(tintColor: UIColor? = nil) -> UIImage {
-                let key: AnyObject = tintColor ?? NSNull()
-                if let image = \(propertyTitle)Cache.object(forKey: key) {
-                    return image
-                }
-        
-                let image = \(propertyTitle)Renderer.image { context in
-        \(childrenCode.leftPad(count: 3))
-                }
-                \(propertyTitle)Cache.setObject(image, forKey: key)
-                
-                return image
-            }
-        }
-        """
-    }
+	public func generateUIImageExtension() throws -> String {
+		guard !title.isEmpty else { throw CodeGenError.invalidTitle }
+		let propertyTitle = title.lowerCamelCased()
+		
+		let childrenCode = try self.generateUIDrawingCode()
+		
+		
+		return """
+		import UIKit
+		
+		extension UIImage {
+		    private static let \(propertyTitle)Cache = NSCache<AnyObject, UIImage>()
+		    private static let \(propertyTitle)Renderer = UIGraphicsImageRenderer(size: CGSize(width: 400, height: 110))
+		
+		    static func \(propertyTitle)(tintColor: UIColor? = nil) -> UIImage {
+		        let key: AnyObject = tintColor ?? NSNull()
+		        if let image = \(propertyTitle)Cache.object(forKey: key) {
+		            return image
+		        }
+		
+		        let image = \(propertyTitle)Renderer.image { context in
+		\(childrenCode.leftPad(count: 3))
+		        }
+		        \(propertyTitle)Cache.setObject(image, forKey: key)
+		        
+		        return image
+		    }
+		}
+		"""
+	}
 }
 
 extension SVGRect: UIDrawingCodeGenerator {
-    public func generateUIDrawingCode() throws -> String {
+	public func generateUIDrawingCode() throws -> String {
 		var code = ""
 		code += "let path = UIBezierPath(rect: \(frame.swiftDefinition()))\n"
 		
 		code += try style.generateUIDrawingCode()
 		
 		return code
-    }
+	}
 }
 
 extension SVGEllipse: UIDrawingCodeGenerator {

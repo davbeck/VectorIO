@@ -46,11 +46,11 @@ private func vectorAngle(u: CGPoint, v: CGPoint) -> CGFloat {
 	
 	var div = dot / (umag * vmag)
 	
-	if (div > 1) {
+	if div > 1 {
 		div = 1
 	}
 	
-	if (div < -1) {
+	if div < -1 {
 		div = -1
 	}
 	
@@ -67,7 +67,7 @@ private func getArcCenter(
 	cosphi: CGFloat,
 	pxp: CGFloat,
 	pyp: CGFloat
-	) -> (center: CGPoint, ang1: CGFloat, ang2: CGFloat) {
+) -> (center: CGPoint, ang1: CGFloat, ang2: CGFloat) {
 	let rxsq = pow(radius.width, 2)
 	let rysq = pow(radius.height, 2)
 	let pxpsq = pow(pxp, 2)
@@ -75,12 +75,12 @@ private func getArcCenter(
 	
 	var radicant = (rxsq * rysq) - (rxsq * pypsq) - (rysq * pxpsq)
 	
-	if (radicant < 0) {
+	if radicant < 0 {
 		radicant = 0
 	}
 	
 	radicant /= (rxsq * pypsq) + (rysq * pxpsq)
-	radicant = (radicant).squareRoot() * (largeArcFlag == sweepFlag ? -1 : 1)
+	radicant = radicant.squareRoot() * (largeArcFlag == sweepFlag ? -1 : 1)
 	
 	let centerxp = radicant * radius.width / radius.height * pyp
 	let centeryp = radicant * -radius.height / radius.width * pxp
@@ -98,11 +98,11 @@ private func getArcCenter(
 	let ang1 = vectorAngle(u: CGPoint(x: 1, y: 0), v: CGPoint(x: vx1, y: vy1))
 	var ang2 = vectorAngle(u: CGPoint(x: vx1, y: vy1), v: CGPoint(x: vx2, y: vy2))
 	
-	if (!sweepFlag && ang2 > 0) {
+	if !sweepFlag && ang2 > 0 {
 		ang2 -= CGFloat.tau
 	}
 	
-	if (sweepFlag && ang2 < 0) {
+	if sweepFlag && ang2 < 0 {
 		ang2 += CGFloat.tau
 	}
 	
@@ -116,10 +116,10 @@ internal func arcToBezier(
 	xAxisRotation: CGFloat = 0,
 	largeArcFlag: Bool = false,
 	sweepFlag: Bool = false
-	) -> [CubicBezierCurve] {
+) -> [CubicBezierCurve] {
 	var radius = radius
 	
-	if (radius.width == 0 || radius.height == 0) {
+	if radius.width == 0 || radius.height == 0 {
 		return []
 	}
 	
@@ -129,7 +129,7 @@ internal func arcToBezier(
 	let pxp = cosphi * (start.x - end.x) / 2 + sinphi * (start.y - end.y) / 2
 	let pyp = -sinphi * (start.x - end.x) / 2 + cosphi * (start.y - end.y) / 2
 	
-	if (pxp == 0 && pyp == 0) {
+	if pxp == 0 && pyp == 0 {
 		return []
 	}
 	
@@ -138,11 +138,11 @@ internal func arcToBezier(
 	
 	let lambda =
 		pow(pxp, 2) / pow(radius.width, 2) +
-			pow(pyp, 2) / pow(radius.height, 2)
+		pow(pyp, 2) / pow(radius.height, 2)
 	
-	if (lambda > 1) {
-		radius.width *= (lambda).squareRoot()
-		radius.height *= (lambda).squareRoot()
+	if lambda > 1 {
+		radius.width *= lambda.squareRoot()
+		radius.height *= lambda.squareRoot()
 	}
 	
 	var (center, ang1, ang2) = getArcCenter(

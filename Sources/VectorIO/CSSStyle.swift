@@ -3,10 +3,10 @@ import CoreGraphics
 
 
 public struct CSSStyle: Hashable {
-    public enum Error: Swift.Error {
-        case invalidRuleDefinition(String)
-    }
-    
+	public enum Error: Swift.Error {
+		case invalidRuleDefinition(String)
+	}
+	
 	
 	public var fill: CGColor?
 	public var fillOpacity: CGFloat?

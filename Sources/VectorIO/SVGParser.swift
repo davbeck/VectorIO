@@ -62,8 +62,8 @@ extension SVGParser: XMLParserDelegate {
 			switch elementName {
 			case "svg":
 				try parseSVG(attributes: attributes)
-            case "rect":
-                try parseRect(attributes: attributes)
+			case "rect":
+				try parseRect(attributes: attributes)
 			case "circle":
 				try parseCircle(attributes: attributes)
 			case "ellipse":
@@ -128,13 +128,13 @@ extension SVGParser: XMLParserDelegate {
 			}
 		}
 	}
-    
-    fileprivate func parseElementAttribute<E: SVGElement>(name: String, value: String, for element: inout E) throws {
-        switch name {
-        case "stroke":
+	
+	fileprivate func parseElementAttribute<E: SVGElement>(name: String, value: String, for element: inout E) throws {
+		switch name {
+		case "stroke":
 			element.style = try CSSStyle(stroke: CGColor.parse(value))
-			.merging(element.style)
-        case "stroke-width":
+				.merging(element.style)
+		case "stroke-width":
 			element.style = try CSSStyle(strokeWidth: CGFloat.parse(value))
 				.merging(element.style)
 		case "fill":
@@ -147,35 +147,35 @@ extension SVGParser: XMLParserDelegate {
 		case "style":
 			try element.style.merge(CSSStyle(definition: value))
 			
-        default:
-            print("unrecognized attribute \(name)=\(value) on \(E.elementName)")
-        }
-    }
-    
-    fileprivate func parseRect(attributes: [String : String]) throws {
-        var element = SVGRect()
-        
-        for (name, value) in attributes {
-            switch name {
-            case "x":
-                element.frame.origin.x = try CGFloat.parse(value)
-            case "y":
-                element.frame.origin.y = try CGFloat.parse(value)
-            case "width":
-                element.frame.size.width = try CGFloat.parse(value)
-            case "height":
-                element.frame.size.height = try CGFloat.parse(value)
-            case "rx":
-                element.radiusX = try CGFloat.parse(value)
-            case "ry":
-                element.radiusY = try CGFloat.parse(value)
-            default:
-                try parseElementAttribute(name: name, value: value, for: &element)
-            }
-        }
+		default:
+			print("unrecognized attribute \(name)=\(value) on \(E.elementName)")
+		}
+	}
+	
+	fileprivate func parseRect(attributes: [String : String]) throws {
+		var element = SVGRect()
 		
-        currentParent.append(element)
-    }
+		for (name, value) in attributes {
+			switch name {
+			case "x":
+				element.frame.origin.x = try CGFloat.parse(value)
+			case "y":
+				element.frame.origin.y = try CGFloat.parse(value)
+			case "width":
+				element.frame.size.width = try CGFloat.parse(value)
+			case "height":
+				element.frame.size.height = try CGFloat.parse(value)
+			case "rx":
+				element.radiusX = try CGFloat.parse(value)
+			case "ry":
+				element.radiusY = try CGFloat.parse(value)
+			default:
+				try parseElementAttribute(name: name, value: value, for: &element)
+			}
+		}
+		
+		currentParent.append(element)
+	}
 	
 	fileprivate func parseCircle(attributes: [String : String]) throws {
 		var element = SVGEllipse()

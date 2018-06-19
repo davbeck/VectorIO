@@ -4,7 +4,8 @@ import VectorIOCodeGen
 
 
 class UIBezierPathTestsTests: XCTestCase {
-	// MARK - Helpers
+
+	// MARK: - Helpers
 	
 	private func normalize(code: String) -> String {
 		return code
@@ -15,17 +16,20 @@ class UIBezierPathTestsTests: XCTestCase {
 	}
 	
 	
-	// MARK - Tests
+	// MARK: - Tests
 	
 	func testUIImageExtension() throws {
-		var svg = SVG(size: CGSize(width: 400, height: 110), elements: [
-			SVGRect(
-				frame: CGRect(x: 0, y: 0, width: 300, height: 100),
-				style: CSSStyle(
-					fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
-					stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
-					strokeWidth: 3
-			))
+		var svg = SVG(
+			size: CGSize(width: 400, height: 110),
+			elements: [
+				SVGRect(
+					frame: CGRect(x: 0, y: 0, width: 300, height: 100),
+					style: CSSStyle(
+						fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+						stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
+						strokeWidth: 3
+					)
+				),
 			]
 		)
 		svg.title = "artboard"

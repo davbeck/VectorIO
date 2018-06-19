@@ -3,8 +3,8 @@ import CoreGraphics
 
 
 public protocol SVGElement {
-    static var elementName: String { get }
-    var style: CSSStyle { get set }
+	static var elementName: String { get }
+	var style: CSSStyle { get set }
 }
 
 public protocol SVGParentElement: SVGElement {

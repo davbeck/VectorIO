@@ -141,7 +141,7 @@ public struct SVGPath: SVGElement {
 						y: CGFloat.parse(arguments.removeFirst())
 					)
 					definitions += arcToBezier(start: currentPoint, end: end, radius: radius, xAxisRotation: angle, largeArcFlag: isLargeArc, sweepFlag: isSweep)
-					.map({ .cubicBezierCurve($0) })
+						.map({ .cubicBezierCurve($0) })
 					currentPoint = end
 					currentControl = end
 				case "Z":

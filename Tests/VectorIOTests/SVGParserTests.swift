@@ -3,7 +3,8 @@ import VectorIO
 
 
 class SVGParserTests: XCTestCase {
-    // MARK - Rect
+
+	// MARK: - Rect
 	
 	func testParseRect() throws {
 		let data = """
@@ -44,21 +45,21 @@ class SVGParserTests: XCTestCase {
 			strokeWidth: 3
 		))
 	}
-    
-    func testParseTransparentRectStrokeAndFill() throws {
-        let data = """
-        <svg width="400" height="180">
-        <rect x="50" y="20" width="150" height="150"
-        style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
-        </svg>
-        """.data(using: .utf8)!
-        
-        let parser = SVGParser(data: data)
-        let svg = try parser.parse()
-        
-        XCTAssertEqual(svg.children.count, 1)
-        guard let element = svg.children.first as? SVGRect else { XCTFail(); return }
-        XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
+	
+	func testParseTransparentRectStrokeAndFill() throws {
+		let data = """
+		<svg width="400" height="180">
+		<rect x="50" y="20" width="150" height="150"
+		style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGRect else { XCTFail(); return }
+		XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
 			fillOpacity: 0.1,
@@ -66,63 +67,63 @@ class SVGParserTests: XCTestCase {
 			strokeWidth: 5,
 			strokeOpacity: 0.9
 		))
-    }
-    
-    func testParseTransparentRect() throws {
-        let data = """
-        <svg width="400" height="180">
-        <rect x="50" y="20" width="150" height="150"
-        style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;opacity:0.5" />
-        </svg>
-        """.data(using: .utf8)!
-        
-        let parser = SVGParser(data: data)
-        let svg = try parser.parse()
-        
-        XCTAssertEqual(svg.children.count, 1)
-        guard let element = svg.children.first as? SVGRect else { XCTFail(); return }
-        XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
+	}
+	
+	func testParseTransparentRect() throws {
+		let data = """
+		<svg width="400" height="180">
+		<rect x="50" y="20" width="150" height="150"
+		style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;opacity:0.5" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGRect else { XCTFail(); return }
+		XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
 			stroke: CGColor(red: 1, green: 0, blue: 1, alpha: 1),
 			strokeWidth: 5,
 			opacity: 0.5
 		))
-    }
-    
-    func testParseRoundedRect() throws {
-        let data = """
-        <svg width="400" height="180">
-        <rect x="50" y="20" rx="20" ry="20" width="150" height="150"
-        style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;opacity:0.5" />
-        </svg>
-        """.data(using: .utf8)!
-        
-        let parser = SVGParser(data: data)
-        let svg = try parser.parse()
-        
-        XCTAssertEqual(svg.children.count, 1)
-        guard let element = svg.children.first as? SVGRect else { XCTFail(); return }
-        XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
-        XCTAssertEqual(element.radiusX, 20)
-        XCTAssertEqual(element.radiusY, 20)
+	}
+	
+	func testParseRoundedRect() throws {
+		let data = """
+		<svg width="400" height="180">
+		<rect x="50" y="20" rx="20" ry="20" width="150" height="150"
+		style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;opacity:0.5" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let parser = SVGParser(data: data)
+		let svg = try parser.parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGRect else { XCTFail(); return }
+		XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
+		XCTAssertEqual(element.radiusX, 20)
+		XCTAssertEqual(element.radiusY, 20)
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
 			stroke: CGColor(red: 1, green: 0, blue: 1, alpha: 1),
 			strokeWidth: 5,
 			opacity: 0.5
 		))
-    }
+	}
 	
 	
-	// MARK - Circle
+	// MARK: - Circle
 	
 	func testParseCircle() throws {
 		let data = """
-        <svg height="100" width="100">
-        <circle cx="50" cy="50" r="40" stroke="#000" stroke-width="3" fill="#ff0000" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="100" width="100">
+		<circle cx="50" cy="50" r="40" stroke="#000" stroke-width="3" fill="#ff0000" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -139,15 +140,15 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Ellipse
+	// MARK: - Ellipse
 	
 	func testParseEllipse() throws {
 		let data = """
-        <svg height="140" width="500">
-        <ellipse cx="200" cy="80" rx="100" ry="50"
-        style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;opacity:0.5" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="140" width="500">
+		<ellipse cx="200" cy="80" rx="100" ry="50"
+		style="fill:#0000ff;stroke:#FF00FF;stroke-width:5;opacity:0.5" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -165,15 +166,15 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Line
+	// MARK: - Line
 	
 	func testParseLine() throws {
 		let data = """
-        <svg height="210" width="500">
-        <line x1="0" y1="0" x2="200" y2="200"
-        style="stroke:rgb(255,0,0);stroke-width:2" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="210" width="500">
+		<line x1="0" y1="0" x2="200" y2="200"
+		style="stroke:rgb(255,0,0);stroke-width:2" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -189,15 +190,15 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Polygon
+	// MARK: - Polygon
 	
 	func testParsePolygon() throws {
 		let data = """
-        <svg height="210" width="500">
-        <polygon points="200,10 250,190 160,210"
-        style="fill:lime" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="210" width="500">
+		<polygon points="200,10 250,190 160,210"
+		style="fill:lime" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -216,11 +217,11 @@ class SVGParserTests: XCTestCase {
 	
 	func testParseEvenOddPolygon() throws {
 		let data = """
-        <svg height="210" width="500">
-        <polygon points="100,10 40,198 190,78 10,78 160,198"
-        style="fill:lime;fill-rule:evenodd;" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="210" width="500">
+		<polygon points="100,10 40,198 190,78 10,78 160,198"
+		style="fill:lime;fill-rule:evenodd;" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -241,15 +242,15 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Polyline
+	// MARK: - Polyline
 	
 	func testParsePolyline() throws {
 		let data = """
-        <svg height="180" width="500">
-        <polyline points="0,40 40,40 40,80 80,80 80,120 120,120 120,160"
-        style="fill:white;stroke:red;stroke-width:4" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="180" width="500">
+		<polyline points="0,40 40,40 40,80 80,80 80,120 120,120 120,160"
+		style="fill:white;stroke:red;stroke-width:4" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -273,14 +274,14 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Path
+	// MARK: - Path
 	
 	func testParsePath() throws {
 		let data = """
-        <svg height="210" width="400">
-        <path d="M150 0 L75 200 L225 200 Z" />
-        </svg>
-        """.data(using: .utf8)!
+		<svg height="210" width="400">
+		<path d="M150 0 L75 200 L225 200 Z" />
+		</svg>
+		""".data(using: .utf8)!
 		
 		let parser = SVGParser(data: data)
 		let svg = try parser.parse()
@@ -314,7 +315,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 50)),
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 25, y: 25), end: CGPoint(x: 40, y: 50)),
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 55, y: 75), end: CGPoint(x: 70, y: 50)),
-			])
+		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor.clear,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
@@ -346,7 +347,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 90, y: 60), end: CGPoint(x: 50, y: 90)),
 			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 10, y: 60), end: CGPoint(x: 10, y: 30)),
 			SVGPath.Definition.closePath,
-			])
+		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor.clear,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
@@ -379,7 +380,7 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Groups
+	// MARK: - Groups
 	
 	func testParseGroup() throws {
 		let data = """
@@ -419,7 +420,7 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - ViewBox
+	// MARK: - ViewBox
 	
 	func testViewBoxWithoutSize() throws {
 		let data = """
@@ -470,7 +471,7 @@ class SVGParserTests: XCTestCase {
 	}
 	
 	
-	// MARK - Example SVGs
+	// MARK: - Example SVGs
 	
 	func testTag() throws {
 		let data = """
@@ -485,9 +486,9 @@ class SVGParserTests: XCTestCase {
 			</g>
 		</svg>
 		""".data(using: .utf8)!
-
+		
 		let svg = try SVGParser(data: data).parse()
-
+		
 		XCTAssertEqual(svg.children.count, 1)
 		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
 		XCTAssertEqual(element.style, CSSStyle(
