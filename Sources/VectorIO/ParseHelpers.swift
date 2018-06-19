@@ -9,6 +9,10 @@ public enum ParseError: Swift.Error {
 
 extension CGFloat {
 	public static func parse<S: StringProtocol>(_ value: S) throws -> CGFloat {
+		if value.hasSuffix("px") {
+			return try parse(value.dropLast(2))
+		}
+		
 		guard let double = Double(value) else { throw ParseError.invalidNumber(String(value)) }
 		return CGFloat(double)
 	}

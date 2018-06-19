@@ -454,4 +454,16 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(svg.size, CGSize(width: 100, height: 100))
 		XCTAssertEqual(svg.viewBox, CGRect(x: 0, y: 0, width: 200, height: 200))
 	}
+	
+	func testSizeInPx() throws {
+		let data = """
+		<svg width="14px" height="14px" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.size, CGSize(width: 14, height: 14))
+		XCTAssertEqual(svg.viewBox, CGRect(x: 0, y: 0, width: 14, height: 14))
+	}
 }
