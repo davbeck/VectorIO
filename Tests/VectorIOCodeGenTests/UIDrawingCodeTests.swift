@@ -53,10 +53,6 @@ class UIBezierPathTestsTests: XCTestCase {
 		"""
 		
 		XCTAssertEqual(normalize(code: code), normalize(code: expected))
-		
-		
-		try code.write(toFile: "/Users/davidbeck/Desktop/code.swift", atomically: true, encoding: .utf8)
-		try expected.write(toFile: "/Users/davidbeck/Desktop/expected.swift", atomically: true, encoding: .utf8)
 	}
 	
 	func testCircle() throws {
