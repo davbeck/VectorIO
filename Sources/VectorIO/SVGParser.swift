@@ -231,22 +231,30 @@ extension SVGParser: XMLParserDelegate {
 	}
 	
 	fileprivate func parseLine(attributes: [String : String]) throws {
-		var element = SVGLine()
+		var element = SVGPath()
+		
+		var start = CGPoint()
+		var end = CGPoint()
 		
 		for (name, value) in attributes {
 			switch name {
 			case "x1":
-				element.start.x = try CGFloat.parse(value)
+				start.x = try CGFloat.parse(value)
 			case "y1":
-				element.start.y = try CGFloat.parse(value)
+				start.y = try CGFloat.parse(value)
 			case "x2":
-				element.end.x = try CGFloat.parse(value)
+				end.x = try CGFloat.parse(value)
 			case "y2":
-				element.end.y = try CGFloat.parse(value)
+				end.y = try CGFloat.parse(value)
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
 		}
+		
+		element.definitions = [
+			.moveTo(start),
+			.lineTo(end),
+		]
 		
 		currentParent.append(element)
 	}

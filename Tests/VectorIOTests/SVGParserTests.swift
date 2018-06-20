@@ -180,9 +180,11 @@ class SVGParserTests: XCTestCase {
 		let svg = try parser.parse()
 		
 		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGLine else { XCTFail(); return }
-		XCTAssertEqual(element.start, CGPoint(x: 0, y: 0))
-		XCTAssertEqual(element.end, CGPoint(x: 200, y: 200))
+		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			.moveTo(CGPoint(x: 0, y: 0)),
+			.lineTo(CGPoint(x: 200, y: 200)),
+		])
 		XCTAssertEqual(element.style, CSSStyle(
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
 			strokeWidth: 2

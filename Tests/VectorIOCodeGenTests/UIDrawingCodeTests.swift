@@ -80,30 +80,6 @@ class UIBezierPathTestsTests: XCTestCase {
 		XCTAssertEqual(normalize(code: code), normalize(code: expected))
 	}
 	
-	func testLine() throws {
-		let element = SVGLine(start: CGPoint(x: 10, y: 15), end: CGPoint(x: 90, y: 85), style: CSSStyle(
-			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 3
-		))
-		
-		let code = try element.generateUIDrawingCode()
-		
-		let expected = """
-		let path = UIBezierPath()
-		path.move(to: CGPoint(x: 10.00, y: 15.00))
-		path.addLine(to: CGPoint(x: 90.00, y: 85.00))
-		path.lineWidth = 3.0
-		if let tintColor = tintColor {
-			tintColor.set()
-		} else {
-			UIColor(red: 0.00, green: 0.00, blue: 0.00, alpha: 1.00).setStroke()
-		}
-		path.stroke()
-		"""
-		
-		XCTAssertEqual(normalize(code: code), normalize(code: expected))
-	}
-	
 	func testPath() throws {
 		let element = SVGPath(definitions: [
 			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 90)),

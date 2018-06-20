@@ -128,19 +128,6 @@ extension SVGEllipse: UIDrawingCodeGenerator {
 	}
 }
 
-extension SVGLine: UIDrawingCodeGenerator {
-	public func generateUIDrawingCode() throws -> String {
-		var code = ""
-		code += "let path = UIBezierPath()\n"
-		code += "path.move(to: \(start.swiftDefinition()))\n"
-		code += "path.addLine(to: \(end.swiftDefinition()))\n"
-		
-		code += try style.generateUIDrawingCode()
-		
-		return code
-	}
-}
-
 extension SVGPath: UIDrawingCodeGenerator {
 	public func generateUIDrawingCode() throws -> String {
 		var code = ""
