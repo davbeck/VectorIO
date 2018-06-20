@@ -329,11 +329,5 @@ extension SVGParser: XMLParserDelegate {
 	}
 }
 
-extension Unicode.Scalar {
-	var isWhitespaceOrNewline: Bool {
-		return CharacterSet.whitespacesAndNewlines.contains(self)
-	}
-}
-
 
 

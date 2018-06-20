@@ -326,38 +326,6 @@ class SVGParserTests: XCTestCase {
 		))
 	}
 	
-	func testParseHeart() throws {
-		let data = """
-		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-		<path fill="none" stroke="red"
-		d="M 10,30
-		A 20,20 0,0,1 50,30
-		A 20,20 0,0,1 90,30
-		Q 90,60 50,90
-		Q 10,60 10,30 z" />
-		</svg>
-		""".data(using: .utf8)!
-		
-		let svg = try SVGParser(data: data).parse()
-		
-		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
-		XCTAssertEqual(element.definitions, [
-			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 30)),
-			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 41.038300489879994, y: 10.0), controlEnd: CGPoint(x: 50.0, y: 18.961699510119995), end: CGPoint(x: 50.0, y: 29.999999999999996)),
-			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 50.0, y: 41.038300489879994), controlEnd: CGPoint(x: 41.03830048988001, y: 50.0), end: CGPoint(x: 30.000000000000007, y: 50.0)),
-			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 81.03830048988, y: 10.0), controlEnd: CGPoint(x: 90.0, y: 18.961699510119995), end: CGPoint(x: 90.0, y: 29.999999999999996)),
-			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 90.0, y: 41.038300489879994), controlEnd: CGPoint(x: 81.03830048988, y: 50.0), end: CGPoint(x: 70.0, y: 50.0)),
-			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 90, y: 60), end: CGPoint(x: 50, y: 90)),
-			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 10, y: 60), end: CGPoint(x: 10, y: 30)),
-			SVGPath.Definition.closePath,
-		])
-		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor.clear,
-			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
-		))
-	}
-	
 	func testParseCubicBezierCurve() throws {
 		let data = """
 		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -476,6 +444,38 @@ class SVGParserTests: XCTestCase {
 	
 	
 	// MARK: - Example SVGs
+	
+	func testParseHeart() throws {
+		let data = """
+		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+		<path fill="none" stroke="red"
+		d="M 10,30
+		A 20,20 0,0,1 50,30
+		A 20,20 0,0,1 90,30
+		Q 90,60 50,90
+		Q 10,60 10,30 z" />
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 30)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 41.038300489879994, y: 10.0), controlEnd: CGPoint(x: 50.0, y: 18.961699510119995), end: CGPoint(x: 50.0, y: 29.999999999999996)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 50.0, y: 41.038300489879994), controlEnd: CGPoint(x: 41.03830048988001, y: 50.0), end: CGPoint(x: 30.000000000000007, y: 50.0)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 81.03830048988, y: 10.0), controlEnd: CGPoint(x: 90.0, y: 18.961699510119995), end: CGPoint(x: 90.0, y: 29.999999999999996)),
+			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 90.0, y: 41.038300489879994), controlEnd: CGPoint(x: 81.03830048988, y: 50.0), end: CGPoint(x: 70.0, y: 50.0)),
+			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 90, y: 60), end: CGPoint(x: 50, y: 90)),
+			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 10, y: 60), end: CGPoint(x: 10, y: 30)),
+			SVGPath.Definition.closePath,
+		])
+		XCTAssertEqual(element.style, CSSStyle(
+			fill: CGColor.clear,
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+		))
+	}
 	
 	func testTag() throws {
 		let data = """

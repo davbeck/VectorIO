@@ -19,7 +19,7 @@ public struct SVG: SVGParentElement {
 		self.init(size: size, viewBox: CGRect(origin: .zero, size: size), elements: elements, style: style)
 	}
 	
-	public init(viewBox: CGRect = .zero, elements: Array<SVGElement> = [], style: CSSStyle = CSSStyle()) {
+	public init(viewBox: CGRect, elements: Array<SVGElement> = [], style: CSSStyle = CSSStyle()) {
 		self.init(size: viewBox.size, viewBox: viewBox, elements: elements, style: style)
 	}
 	
