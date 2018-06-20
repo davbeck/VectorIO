@@ -11,6 +11,13 @@ public enum CodeGenError: Swift.Error {
 
 public protocol UIDrawingCodeGenerator: SVGElement {
 	func generateUIDrawingCode() throws -> String
+	var shouldGenerate: Bool { get }
+}
+
+extension UIDrawingCodeGenerator {
+	public var shouldGenerate: Bool {
+		return style.hasFill || style.hasStroke
+	}
 }
 
 extension CSSStyle {
@@ -51,14 +58,18 @@ extension CSSStyle {
 extension SVGParentElement {
 	public func generateUIDrawingCode() throws -> String {
 		return try children
-			.filter({ $0.style.hasFill || $0.style.hasStroke })
 			.compactMap({ $0 as? UIDrawingCodeGenerator })
+			.filter({ $0.shouldGenerate })
 			.map({ try "do {\n\t\($0.generateUIDrawingCode())\n}" })
 			.joined(separator: "\n")
 	}
 }
 
-extension SVGGroup: UIDrawingCodeGenerator {}
+extension SVGGroup: UIDrawingCodeGenerator {
+	public var shouldGenerate: Bool {
+		return true
+	}
+}
 
 
 
@@ -75,7 +86,6 @@ extension SVG: UIDrawingCodeGenerator {
 		
 		extension UIImage {
 		    private static let \(propertyTitle)Cache = NSCache<AnyObject, UIImage>()
-		    private static let \(propertyTitle)Renderer = UIGraphicsImageRenderer(size: CGSize(width: 400, height: 110))
 		
 		    static func \(propertyTitle)(tintColor: UIColor? = nil) -> UIImage {
 		        let key: AnyObject = tintColor ?? NSNull()
@@ -83,7 +93,8 @@ extension SVG: UIDrawingCodeGenerator {
 		            return image
 		        }
 		
-		        let image = \(propertyTitle)Renderer.image { context in
+		        let renderer = UIGraphicsImageRenderer(size: \(size.swiftDefinition()))
+		        let image = renderer.image { context in
 		\(childrenCode.leftPad(count: 3))
 		        }
 		        \(propertyTitle)Cache.setObject(image, forKey: key)

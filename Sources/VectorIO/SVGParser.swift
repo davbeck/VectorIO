@@ -22,6 +22,7 @@ public class SVGParser: NSObject {
 			}
 		}
 	}
+	fileprivate var currentElement: String?
 	
 	private init(_ parser: XMLParser) {
 		xmlParser = parser
@@ -61,6 +62,8 @@ public class SVGParser: NSObject {
 extension SVGParser: XMLParserDelegate {
 	public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes: [String : String] = [:]) {
 		do {
+			currentElement = elementName
+			
 			switch elementName {
 			case "svg":
 				try parseSVG(attributes: attributes)
@@ -93,6 +96,12 @@ extension SVGParser: XMLParserDelegate {
 		guard let element = parents.last, type(of: element).elementName == elementName else { return }
 		parents.removeLast()
 		currentParent.append(element)
+	}
+	
+	public func parser(_ parser: XMLParser, foundCharacters string: String) {
+		if currentElement == "title", !string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+			svg.title = string
+		}
 	}
 	
 	fileprivate func parseSVG(attributes: [String : String]) throws {

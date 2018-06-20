@@ -1,3 +1,3 @@
-import VectorIO
+import VectorIOCodeGen
 
 CLI().run()
