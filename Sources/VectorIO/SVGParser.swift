@@ -251,14 +251,18 @@ extension SVGParser: XMLParserDelegate {
 	}
 	
 	fileprivate func parsePolygon(attributes: [String : String]) throws {
-		var element = SVGPolygon()
+		var element = SVGPath()
 		
 		for (name, value) in attributes {
 			switch name {
 			case "points":
-				element.points = try value
+				let points = try value
 					.components(separatedBy: .whitespacesAndNewlines)
 					.map({ try CGPoint.parse($0) })
+				guard points.count > 0 else { return }
+				element.definitions += [.moveTo(points[0])]
+				element.definitions += points.dropFirst().map({ .lineTo($0) })
+				element.definitions += [.closePath]
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}
@@ -268,14 +272,17 @@ extension SVGParser: XMLParserDelegate {
 	}
 	
 	fileprivate func parsePolyline(attributes: [String : String]) throws {
-		var element = SVGPolyline()
+		var element = SVGPath()
 		
 		for (name, value) in attributes {
 			switch name {
 			case "points":
-				element.points = try value
+				let points = try value
 					.components(separatedBy: .whitespacesAndNewlines)
 					.map({ try CGPoint.parse($0) })
+				guard points.count > 0 else { return }
+				element.definitions += [.moveTo(points[0])]
+				element.definitions += points.dropFirst().map({ .lineTo($0) })
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}

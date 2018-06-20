@@ -204,12 +204,13 @@ class SVGParserTests: XCTestCase {
 		let svg = try parser.parse()
 		
 		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGPolygon else { XCTFail(); return }
-		XCTAssertEqual(element.points, [
-			CGPoint(x: 200, y: 10),
-			CGPoint(x: 250, y: 190),
-			CGPoint(x: 160, y: 210),
-		])
+		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 200, y: 10)),
+			SVGPath.Definition.lineTo(CGPoint(x: 250, y: 190)),
+			SVGPath.Definition.lineTo(CGPoint(x: 160, y: 210)),
+			SVGPath.Definition.closePath,
+			])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1)
 		))
@@ -227,14 +228,15 @@ class SVGParserTests: XCTestCase {
 		let svg = try parser.parse()
 		
 		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGPolygon else { XCTFail(); return }
-		XCTAssertEqual(element.points, [
-			CGPoint(x: 100, y: 10),
-			CGPoint(x: 40, y: 198),
-			CGPoint(x: 190, y: 78),
-			CGPoint(x: 10, y: 78),
-			CGPoint(x: 160, y: 198),
-		])
+		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 100, y: 10)),
+			SVGPath.Definition.lineTo(CGPoint(x: 40, y: 198)),
+			SVGPath.Definition.lineTo(CGPoint(x: 190, y: 78)),
+			SVGPath.Definition.lineTo(CGPoint(x: 10, y: 78)),
+			SVGPath.Definition.lineTo(CGPoint(x: 160, y: 198)),
+			SVGPath.Definition.closePath,
+			])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1),
 			fillRule: .evenOdd
@@ -256,16 +258,16 @@ class SVGParserTests: XCTestCase {
 		let svg = try parser.parse()
 		
 		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGPolyline else { XCTFail(); return }
-		XCTAssertEqual(element.points, [
-			CGPoint(x: 0, y: 40),
-			CGPoint(x: 40, y: 40),
-			CGPoint(x: 40, y: 80),
-			CGPoint(x: 80, y: 80),
-			CGPoint(x: 80, y: 120),
-			CGPoint(x: 120, y: 120),
-			CGPoint(x: 120, y: 160),
-		])
+		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.definitions, [
+			SVGPath.Definition.moveTo(CGPoint(x: 0, y: 40)),
+			SVGPath.Definition.lineTo(CGPoint(x: 40, y: 40)),
+			SVGPath.Definition.lineTo(CGPoint(x: 40, y: 80)),
+			SVGPath.Definition.lineTo(CGPoint(x: 80, y: 80)),
+			SVGPath.Definition.lineTo(CGPoint(x: 80, y: 120)),
+			SVGPath.Definition.lineTo(CGPoint(x: 120, y: 120)),
+			SVGPath.Definition.lineTo(CGPoint(x: 120, y: 160)),
+			])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 1, green: 1, blue: 1, alpha: 1),
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
