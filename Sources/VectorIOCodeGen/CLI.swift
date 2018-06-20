@@ -7,7 +7,7 @@ extension Collection where Index == Int {
 		let collection = self
 		let thrownLock = NSLock()
 		var thrown: Error?
-		DispatchQueue.concurrentPerform(iterations: collection.count) { (index) in
+		DispatchQueue.concurrentPerform(iterations: collection.count) { index in
 			let input = collection[index]
 			
 			do {
@@ -37,7 +37,7 @@ public class CLI {
 		do {
 			let inputs = arguments.map({ URL(fileURLWithPath: $0) })
 			
-			try inputs.asyncForEach { (input) in
+			try inputs.asyncForEach { input in
 				try self.process(input: input)
 			}
 		} catch {
@@ -47,7 +47,7 @@ public class CLI {
 	
 	private func process(input: URL) throws {
 		if let subInputs = try? FileManager.default.contentsOfDirectory(at: input, includingPropertiesForKeys: nil, options: []) {
-			try subInputs.asyncForEach({ (input) in
+			try subInputs.asyncForEach({ input in
 				try self.process(input: input)
 			})
 		} else {

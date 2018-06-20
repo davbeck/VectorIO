@@ -210,7 +210,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.lineTo(CGPoint(x: 250, y: 190)),
 			SVGPath.Definition.lineTo(CGPoint(x: 160, y: 210)),
 			SVGPath.Definition.closePath,
-			])
+		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1)
 		))
@@ -236,7 +236,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.lineTo(CGPoint(x: 10, y: 78)),
 			SVGPath.Definition.lineTo(CGPoint(x: 160, y: 198)),
 			SVGPath.Definition.closePath,
-			])
+		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1),
 			fillRule: .evenOdd
@@ -267,7 +267,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.lineTo(CGPoint(x: 80, y: 120)),
 			SVGPath.Definition.lineTo(CGPoint(x: 120, y: 120)),
 			SVGPath.Definition.lineTo(CGPoint(x: 120, y: 160)),
-			])
+		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 1, green: 1, blue: 1, alpha: 1),
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),

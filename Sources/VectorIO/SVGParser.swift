@@ -22,6 +22,7 @@ public class SVGParser: NSObject {
 			}
 		}
 	}
+	
 	fileprivate var currentElement: String?
 	
 	private init(_ parser: XMLParser) {
