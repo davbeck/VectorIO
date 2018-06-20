@@ -1,6 +1,29 @@
 import Foundation
 import VectorIO
-import VectorIOCodeGen
+
+
+extension Collection where Index == Int {
+	func asyncForEach(_ body: @escaping (Self.Element) throws -> Void) throws {
+		let collection = self
+		let thrownLock = NSLock()
+		var thrown: Error?
+		DispatchQueue.concurrentPerform(iterations: collection.count) { (index) in
+			let input = collection[index]
+			
+			do {
+				try body(input)
+			} catch {
+				thrownLock.lock()
+				thrown = error
+				thrownLock.unlock()
+			}
+		}
+		
+		if let error = thrown {
+			throw error
+		}
+	}
+}
 
 
 public class CLI {
@@ -14,14 +37,8 @@ public class CLI {
 		do {
 			let inputs = arguments.map({ URL(fileURLWithPath: $0) })
 			
-			for input in inputs {
-				if let subInputs = try? FileManager.default.contentsOfDirectory(at: input, includingPropertiesForKeys: nil, options: []) {
-					for input in subInputs {
-						try process(input: input)
-					}
-				} else {
-					try process(input: input)
-				}
+			try inputs.asyncForEach { (input) in
+				try self.process(input: input)
 			}
 		} catch {
 			print("failed to convert files: \(error)")
@@ -29,11 +46,17 @@ public class CLI {
 	}
 	
 	private func process(input: URL) throws {
-		guard let parser = SVGParser(contentsOf: input) else { return }
-		let svg = try parser.parse()
-		
-		let output = input.deletingLastPathComponent().appendingPathComponent("\(svg.title)+UIImage.swift")
-		
-		try svg.generateUIImageExtension().write(to: output, atomically: true, encoding: .utf8)
+		if let subInputs = try? FileManager.default.contentsOfDirectory(at: input, includingPropertiesForKeys: nil, options: []) {
+			try subInputs.asyncForEach({ (input) in
+				try self.process(input: input)
+			})
+		} else {
+			guard let parser = SVGParser(contentsOf: input) else { return }
+			let svg = try parser.parse()
+			
+			let output = input.deletingLastPathComponent().appendingPathComponent("\(svg.title)+UIImage.swift")
+			
+			try svg.generateUIImageExtension().write(to: output, atomically: true, encoding: .utf8)
+		}
 	}
 }
