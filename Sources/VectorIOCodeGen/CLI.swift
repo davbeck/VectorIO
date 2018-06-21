@@ -33,21 +33,18 @@ public class CLI {
 		self.arguments = arguments
 	}
 	
-	public func run() {
-		do {
-			let inputs = arguments.map({ URL(fileURLWithPath: $0) })
-			
-			try inputs.asyncForEach { input in
-				try self.process(input: input)
-			}
-		} catch {
-			print("failed to convert files: \(error)")
+	public func run() throws {
+		let inputs = arguments.map({ URL(fileURLWithPath: $0) })
+		
+		try inputs.asyncForEach { input in
+			try self.process(input: input)
 		}
 	}
 	
 	private func process(input: URL) throws {
 		if let subInputs = try? FileManager.default.contentsOfDirectory(at: input, includingPropertiesForKeys: nil, options: []) {
 			try subInputs.asyncForEach({ input in
+				guard input.pathExtension.lowercased() == "svg" else { return }
 				try self.process(input: input)
 			})
 		} else {

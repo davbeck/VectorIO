@@ -63,7 +63,7 @@ class CLITests: XCTestCase {
 	
 	func testIndividualFiles() throws {
 		let cli = CLI(arguments: [heartURL.path, tagURL.path])
-		cli.run()
+		try cli.run()
 		
 		do {
 			let output = try String(contentsOf: heartOutputURL)
@@ -83,7 +83,7 @@ class CLITests: XCTestCase {
 	
 	func testFolder() throws {
 		let cli = CLI(arguments: [directory.path])
-		cli.run()
+		try cli.run()
 		
 		do {
 			let output = try String(contentsOf: heartOutputURL)
@@ -99,5 +99,16 @@ class CLITests: XCTestCase {
 			let expected = try parsed.generateUIImageExtension()
 			XCTAssertEqual(normalize(code: output), normalize(code: expected))
 		}
+	}
+	
+	func testIgnoresOtherFiles() throws {
+		let otherURL = directory.appendingPathComponent("NotSVG.png")
+		let otherOutputURL = directory.appendingPathComponent("NotSVG+UIImage.swift")
+		try "other".write(to: otherURL, atomically: true, encoding: .utf8)
+		
+		let cli = CLI(arguments: [directory.path])
+		try cli.run()
+		
+		XCTAssertFalse(FileManager.default.fileExists(atPath: otherOutputURL.path))
 	}
 }
