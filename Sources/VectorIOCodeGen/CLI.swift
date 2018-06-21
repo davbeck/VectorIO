@@ -48,10 +48,20 @@ public class CLI {
 				try self.process(input: input)
 			})
 		} else {
+			let outputName = input.deletingPathExtension().lastPathComponent
+			let output = input
+				.deletingLastPathComponent()
+				.appendingPathComponent("\(outputName)+UIImage.swift")
+			
+			let inputModificationDate = (try? FileManager.default.attributesOfItem(atPath: input.path)[.modificationDate]) as? Date
+			let ouptutModificationDate = (try? FileManager.default.attributesOfItem(atPath: output.path)[.modificationDate]) as? Date
+			
+			if let ouptutModificationDate = ouptutModificationDate, let inputModificationDate = inputModificationDate, inputModificationDate < ouptutModificationDate {
+				return
+			}
+			
 			guard let parser = SVGParser(contentsOf: input) else { return }
 			let svg = try parser.parse()
-			
-			let output = input.deletingLastPathComponent().appendingPathComponent("\(svg.title)+UIImage.swift")
 			
 			try svg.generateUIImageExtension().write(to: output, atomically: true, encoding: .utf8)
 		}

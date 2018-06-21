@@ -34,7 +34,7 @@ class CLITests: XCTestCase {
 		try! heartSVG.write(to: heartURL, atomically: true, encoding: .utf8)
 		
 		tagURL = directory.appendingPathComponent("Tag.svg")
-		tagOutputURL = directory.appendingPathComponent("NoteTag+UIImage.swift")
+		tagOutputURL = directory.appendingPathComponent("Tag+UIImage.swift")
 		tagSVG = """
 		<?xml version="1.0" encoding="UTF-8"?>
 		<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -91,6 +91,26 @@ class CLITests: XCTestCase {
 			parsed.title = "Heart"
 			let expected = try parsed.generateUIImageExtension()
 			XCTAssertEqual(normalize(code: output), normalize(code: expected))
+		}
+		
+		do {
+			let output = try String(contentsOf: tagOutputURL)
+			let parsed = try SVGParser(data: tagSVG.data(using: .utf8)!).parse()
+			let expected = try parsed.generateUIImageExtension()
+			XCTAssertEqual(normalize(code: output), normalize(code: expected))
+		}
+	}
+	
+	func testIgnoresModifiedFiles() throws {
+		let expectedHeartOutput = "modified"
+		try expectedHeartOutput.write(to: heartOutputURL, atomically: true, encoding: .utf8)
+		
+		let cli = CLI(arguments: [directory.path])
+		try cli.run()
+		
+		do {
+			let output = try String(contentsOf: heartOutputURL)
+			XCTAssertEqual(normalize(code: output), normalize(code: expectedHeartOutput))
 		}
 		
 		do {
