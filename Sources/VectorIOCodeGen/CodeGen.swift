@@ -41,14 +41,14 @@ extension CSSStyle {
 			let uiColor = try stroke.swiftUIColorDefinition(alpha: strokeOpacity ?? 1)
 			code += "\t\(uiColor).setStroke()\n"
 		}
-		code += "}\n"
+		code += "}"
 		
 		if hasFill {
-			code += "path.fill()\n"
+			code += "\npath.fill()"
 		}
 		
 		if hasStroke {
-			code += "path.stroke()\n"
+			code += "\npath.stroke()"
 		}
 		
 		return code
@@ -60,7 +60,7 @@ extension SVGParentElement {
 		return try children
 			.compactMap({ $0 as? UIDrawingCodeGenerator })
 			.filter({ $0.shouldGenerate })
-			.map({ try "do {\n\t\($0.generateUIDrawingCode())\n}" })
+			.map({ try "do {\n\($0.generateUIDrawingCode().leftPad())\n}" })
 			.joined(separator: "\n")
 	}
 }
@@ -85,22 +85,22 @@ extension SVG: UIDrawingCodeGenerator {
 		import UIKit
 		
 		extension UIImage {
-		    private static let \(propertyTitle)Cache = NSCache<AnyObject, UIImage>()
+			private static let \(propertyTitle)Cache = NSCache<AnyObject, UIImage>()
 		
-		    static func \(propertyTitle)(tintColor: UIColor? = nil) -> UIImage {
-		        let key: AnyObject = tintColor ?? NSNull()
-		        if let image = \(propertyTitle)Cache.object(forKey: key) {
-		            return image
-		        }
+			static func \(propertyTitle)(tintColor: UIColor? = nil) -> UIImage {
+				let key: AnyObject = tintColor ?? NSNull()
+				if let image = \(propertyTitle)Cache.object(forKey: key) {
+					return image
+				}
 		
-		        let renderer = UIGraphicsImageRenderer(size: \(size.swiftDefinition()))
-		        let image = renderer.image { context in
+				let renderer = UIGraphicsImageRenderer(size: \(size.swiftDefinition()))
+				let image = renderer.image { context in
 		\(childrenCode.leftPad(count: 3))
-		        }
-		        \(propertyTitle)Cache.setObject(image, forKey: key)
-		        
-		        return image
-		    }
+				}
+				\(propertyTitle)Cache.setObject(image, forKey: key)
+		
+				return image
+			}
 		}
 		"""
 	}
