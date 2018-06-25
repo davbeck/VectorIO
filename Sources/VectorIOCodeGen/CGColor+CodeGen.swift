@@ -11,20 +11,18 @@ extension CGColor {
 		switch colorSpace.model {
 		case .rgb:
 			return "UIColor(red: \(components[0].swiftDefinition()), green: \(components[1].swiftDefinition()), blue: \(components[2].swiftDefinition()), alpha: \(alpha.swiftDefinition()))"
-		case .unknown:
-			throw CodeGenError.invalidColor
-		case .monochrome:
-			throw CodeGenError.invalidColor
-		case .cmyk:
-			throw CodeGenError.invalidColor
-		case .lab:
-			throw CodeGenError.invalidColor
-		case .deviceN:
-			throw CodeGenError.invalidColor
-		case .indexed:
-			throw CodeGenError.invalidColor
-		case .pattern:
-			throw CodeGenError.invalidColor
+		default:
+			if #available(OSX 10.11, *) {
+				guard
+					let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+					let rgb = self.converted(to: colorSpace, intent: .defaultIntent, options: nil)
+				else {
+					throw CodeGenError.invalidColor
+				}
+				return try rgb.swiftUIColorDefinition(alpha: alpha)
+			} else {
+				throw CodeGenError.invalidColor
+			}
 		}
 	}
 }
