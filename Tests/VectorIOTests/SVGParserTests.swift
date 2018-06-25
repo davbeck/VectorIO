@@ -21,8 +21,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.frame, CGRect(x: 0, y: 0, width: 300, height: 100))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 3
+			strokeWidth: 3,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -41,8 +45,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.frame, CGRect(x: 0, y: 0, width: 300, height: 100))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 3
+			strokeWidth: 3,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -65,7 +73,9 @@ class SVGParserTests: XCTestCase {
 			fillOpacity: 0.1,
 			stroke: CGColor(red: 1, green: 0, blue: 1, alpha: 1),
 			strokeWidth: 5,
-			strokeOpacity: 0.9
+			strokeOpacity: 0.9,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -85,9 +95,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.frame, CGRect(x: 50, y: 20, width: 150, height: 150))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 1, alpha: 1),
 			strokeWidth: 5,
-			opacity: 0.5
+			strokeOpacity: 1,
+			opacity: 0.5,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -109,9 +122,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.radiusY, 20)
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 1, alpha: 1),
 			strokeWidth: 5,
-			opacity: 0.5
+			strokeOpacity: 1,
+			opacity: 0.5,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -134,8 +150,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.radius, CGSize(width: 40, height: 40))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 3
+			strokeWidth: 3,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -159,9 +179,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.radius, CGSize(width: 100, height: 50))
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 1, alpha: 1),
 			strokeWidth: 5,
-			opacity: 0.5
+			strokeOpacity: 1,
+			opacity: 0.5,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -186,8 +209,13 @@ class SVGParserTests: XCTestCase {
 			.lineTo(CGPoint(x: 200, y: 200)),
 		])
 		XCTAssertEqual(element.style, CSSStyle(
+			fill: .black,
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 2
+			strokeWidth: 2,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -214,7 +242,13 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.closePath,
 		])
 		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1)
+			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1),
+			fillOpacity: 1,
+			stroke: .clear,
+			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -241,6 +275,11 @@ class SVGParserTests: XCTestCase {
 		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 0, green: 1, blue: 0, alpha: 1),
+			fillOpacity: 1,
+			stroke: .clear,
+			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
 			fillRule: .evenOdd
 		))
 	}
@@ -272,8 +311,12 @@ class SVGParserTests: XCTestCase {
 		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 1, green: 1, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 4
+			strokeWidth: 4,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -298,7 +341,7 @@ class SVGParserTests: XCTestCase {
 			SVGPath.Definition.lineTo(CGPoint(x: 225, y: 200)),
 			SVGPath.Definition.closePath,
 		])
-		XCTAssertEqual(element.style, CSSStyle())
+		XCTAssertEqual(element.style, CSSStyle.defaults)
 	}
 	
 	func testParseQuadraticBezierCurve() throws {
@@ -322,7 +365,12 @@ class SVGParserTests: XCTestCase {
 		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor.clear,
-			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+			fillOpacity: 1,
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -347,7 +395,12 @@ class SVGParserTests: XCTestCase {
 		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor.clear,
-			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+			fillOpacity: 1,
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -370,8 +423,12 @@ class SVGParserTests: XCTestCase {
 		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor(red: 1, green: 1, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 5
+			strokeWidth: 5,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 		
 		guard element.children.count == 2 else { XCTFail(); return }
@@ -386,8 +443,12 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(circle2.radius, CGSize(width: 25, height: 25))
 		XCTAssertEqual(circle2.style, CSSStyle(
 			fill: CGColor(red: 0, green: 0, blue: 1, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 5
+			strokeWidth: 5,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -473,7 +534,12 @@ class SVGParserTests: XCTestCase {
 		])
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor.clear,
-			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+			fillOpacity: 1,
+			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
+			fillRule: .evenOdd
 		))
 	}
 	
@@ -497,8 +563,11 @@ class SVGParserTests: XCTestCase {
 		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
 		XCTAssertEqual(element.style, CSSStyle(
 			fill: CGColor.clear,
+			fillOpacity: 1,
 			stroke: CGColor.clear,
 			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
 			fillRule: .evenOdd
 		))
 		
@@ -507,9 +576,24 @@ class SVGParserTests: XCTestCase {
 		guard let path = element.children[0] as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(path.style, CSSStyle(
 			fill: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
+			fillOpacity: 1,
 			stroke: CGColor.clear,
 			strokeWidth: 1,
+			strokeOpacity: 1,
+			opacity: 1,
 			fillRule: .evenOdd
 		))
+	}
+	
+	func testCopyright() throws {
+		let data = """
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91 1.05.34 1.7.34c.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
+		XCTAssertEqual(element.style, CSSStyle.defaults)
 	}
 }

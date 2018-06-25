@@ -16,7 +16,7 @@ extension SVGParentElement {
 	public mutating func append(_ child: SVGElement) {
 		var child = child
 		let style = child.style
-		child.style = self.style.merging(style)
+		child.style = CSSStyle.defaults.merging(self.style).merging(style)
 		children.append(child)
 	}
 }

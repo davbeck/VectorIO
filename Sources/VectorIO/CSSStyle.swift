@@ -27,6 +27,17 @@ public struct CSSStyle: Hashable {
 	}
 	
 	
+	public static let defaults = CSSStyle(
+		fill: .black,
+		fillOpacity: 1,
+		stroke: .clear,
+		strokeWidth: 1,
+		strokeOpacity: 1,
+		opacity: 1,
+		fillRule: .evenOdd
+	)
+	
+	
 	public init(
 		fill: CGColor? = nil,
 		fillOpacity: CGFloat? = nil,
