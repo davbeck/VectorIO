@@ -85,16 +85,17 @@ extension SVG: UIDrawingCodeGenerator {
 		import UIKit
 		
 		extension UIImage {
-			private static let \(propertyTitle)Cache = NSCache<AnyObject, UIImage>()
+			private static let \(propertyTitle)Cache = NSCache<NSString, UIImage>()
 		
-			static func \(propertyTitle)(tintColor: UIColor? = nil) -> UIImage {
-				let key: AnyObject = tintColor ?? NSNull()
+			static func \(propertyTitle)(size: CGSize = \(size.swiftDefinition()), tintColor: UIColor? = nil) -> UIImage {
+				let key = "\\(size.width)x\\(size.height)-\\(String(describing: tintColor))" as NSString
 				if let image = \(propertyTitle)Cache.object(forKey: key) {
 					return image
 				}
-		
-				let renderer = UIGraphicsImageRenderer(size: \(size.swiftDefinition()))
+				
+				let renderer = UIGraphicsImageRenderer(size: size)
 				let image = renderer.image { context in
+					context.cgContext.scaleBy(x: size.width / \(size.width.swiftDefinition()), y: size.height / \(size.height.swiftDefinition()))
 		\(childrenCode.leftPad(count: 3))
 				}
 				\(propertyTitle)Cache.setObject(image, forKey: key)

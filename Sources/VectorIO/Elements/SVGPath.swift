@@ -44,10 +44,10 @@ public struct SVGPath: SVGElement {
 				})
 				.replacingOccurrences(of: hyphen, with: "$1 -")
 				.components(separatedBy: .svgValueSeparators)
-			.filter({ !$0.isEmpty })
+				.filter({ !$0.isEmpty })
 		}
 		
-		private static  let commands = try! NSRegularExpression(pattern: "([MLQTCSAZVH])([^MLQTCSAZVH]*)", options: [.caseInsensitive])
+		private static let commands = try! NSRegularExpression(pattern: "([MLQTCSAZVH])([^MLQTCSAZVH]*)", options: [.caseInsensitive])
 		
 		static func parse(_ value: String) throws -> [Definition] {
 			var definitions: [SVGPath.Definition] = []
@@ -64,7 +64,7 @@ public struct SVGPath: SVGElement {
 				guard
 					let commandRange = Range(result.range(at: 1), in: value),
 					let valuesRange = Range(result.range(at: 2), in: value)
-					else { continue }
+				else { continue }
 				let command = value[commandRange]
 				let arguments = normalize(arguments: String(value[valuesRange]))
 				let isRelative = command.lowercased() == command

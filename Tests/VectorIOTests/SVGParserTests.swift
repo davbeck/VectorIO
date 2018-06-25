@@ -616,5 +616,6 @@ class SVGParserTests: XCTestCase {
 		
 		XCTAssertEqual(svg.children.count, 1)
 		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
+		XCTAssertEqual(element.children.count, 2)
 	}
 }

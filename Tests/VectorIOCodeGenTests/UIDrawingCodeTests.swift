@@ -25,14 +25,16 @@ class UIBezierPathTestsTests: XCTestCase {
 		let expected = """
 		import UIKit
 		extension UIImage {
-			private static let artboardCache = NSCache<AnyObject, UIImage>()
-			static func artboard(tintColor: UIColor? = nil) -> UIImage {
-				let key: AnyObject = tintColor ?? NSNull()
+			private static let artboardCache = NSCache<NSString, UIImage>()
+			static func artboard(size: CGSize = CGSize(width: 400.00, height: 110.00), tintColor: UIColor? = nil) -> UIImage {
+				let key = "\\(size.width)x\\(size.height)-\\(String(describing: tintColor))" as NSString
 				if let image = artboardCache.object(forKey: key) {
 					return image
 				}
-				let renderer = UIGraphicsImageRenderer(size: CGSize(width: 400.00, height: 110.00))
+				let renderer = UIGraphicsImageRenderer(size: size)
 				let image = renderer.image { context in
+					context.cgContext.scaleBy(x: size.width / 400.00, y: size.height / 110.00)
+					
 					do {
 						let path = UIBezierPath(rect: CGRect(x: 0.00, y: 0.00, width: 300.00, height: 100.00))
 						path.lineWidth = 3.0

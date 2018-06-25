@@ -11,7 +11,7 @@ extension String {
 		guard
 			let result = expression.firstMatch(in: self, options: [], range: NSRange(startIndex..<endIndex, in: self)),
 			let range = Range(result.range, in: self)
-			else { return self }
+		else { return self }
 		
 		let matches = (0..<result.numberOfRanges)
 			.compactMap({ Range(result.range(at: $0), in: self) })
@@ -35,7 +35,7 @@ extension NSRegularExpression {
 	func matches(in string: String, options: NSRegularExpression.MatchingOptions = []) -> Array<NSTextCheckingResult> {
 		var results = Array<NSTextCheckingResult>()
 		
-		self.enumerateMatches(in: string, options: options, range: NSRange(string.startIndex..<string.endIndex, in: string)) { (result, flags, stop) in
+		self.enumerateMatches(in: string, options: options, range: NSRange(string.startIndex..<string.endIndex, in: string)) { result, flags, stop in
 			guard let result = result else { return }
 			
 			results.append(result)
