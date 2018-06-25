@@ -266,7 +266,8 @@ extension SVGParser: XMLParserDelegate {
 			switch name {
 			case "points":
 				let points = try value
-					.components(separatedBy: .whitespacesAndNewlines)
+					.components(separatedBy: .svgValueSeparators)
+					.stride(by: 2)
 					.map({ try CGPoint.parse($0) })
 				guard points.count > 0 else { return }
 				element.definitions += [.moveTo(points[0])]
@@ -287,7 +288,8 @@ extension SVGParser: XMLParserDelegate {
 			switch name {
 			case "points":
 				let points = try value
-					.components(separatedBy: .whitespacesAndNewlines)
+					.components(separatedBy: .svgValueSeparators)
+					.stride(by: 2)
 					.map({ try CGPoint.parse($0) })
 				guard points.count > 0 else { return }
 				element.definitions += [.moveTo(points[0])]

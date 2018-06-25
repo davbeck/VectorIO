@@ -1,6 +1,24 @@
 import Foundation
 
 
+extension CharacterSet {
+	static let svgValueSeparators: CharacterSet = {
+		var set = CharacterSet.whitespacesAndNewlines
+		set.insert(",")
+		return set
+	}()
+}
+
+
+extension Array {
+	func stride(by chunkSize: Int) -> [SubSequence] {
+		return Swift.stride(from: 0, to: self.count, by: chunkSize).map {
+			self.suffix(from: $0).prefix(chunkSize)
+		}
+	}
+}
+
+
 public enum ParseError: Swift.Error {
 	case invalidNumber(String)
 	case invalidColor(String)
@@ -30,6 +48,15 @@ extension CGPoint {
 		
 		let x = try CGFloat.parse(parts[0])
 		let y = try CGFloat.parse(parts[1])
+		
+		return CGPoint(x: x, y: y)
+	}
+	
+	public static func parse<C: Collection>(_ parts: C) throws -> CGPoint where C.Element: StringProtocol {
+		guard parts.count == 2 else { throw CGPointParseError(value: "\(parts)") }
+		
+		let x = try CGFloat.parse(parts[parts.startIndex])
+		let y = try CGFloat.parse(parts[parts.index(after: parts.startIndex)])
 		
 		return CGPoint(x: x, y: y)
 	}

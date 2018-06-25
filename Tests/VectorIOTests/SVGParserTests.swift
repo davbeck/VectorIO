@@ -596,4 +596,25 @@ class SVGParserTests: XCTestCase {
 		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
 		XCTAssertEqual(element.style, CSSStyle.defaults)
 	}
+	
+	func testAdd() throws {
+		let data = """
+		<?xml version="1.0" encoding="UTF-8"?>
+		<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+			<title>AddContent</title>
+			<desc>Created with Sketch.</desc>
+			<defs></defs>
+			<g id="AddContent" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+				<circle id="Oval" stroke="#319ACF" cx="11" cy="11" r="10.5"></circle>
+				<polygon id="Plus" fill="#319ACF" points="16.5 11.5 11.5 11.5 11.5 16.5 10.5 16.5 10.5 11.5 5.5 11.5 5.5 10.5 10.5 10.5 10.5 5.5 11.5 5.5 11.5 10.5 16.5 10.5"></polygon>
+			</g>
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
+	}
 }

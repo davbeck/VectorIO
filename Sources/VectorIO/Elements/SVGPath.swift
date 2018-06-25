@@ -43,16 +43,12 @@ public struct SVGPath: SVGElement {
 					return String(matches[2]) + matches[3].replacingOccurrences(of: ".", with: " .")
 				})
 				.replacingOccurrences(of: hyphen, with: "$1 -")
-				.components(separatedBy: separatorCharacters)
+				.components(separatedBy: .svgValueSeparators)
 			.filter({ !$0.isEmpty })
 		}
 		
 		private static  let commands = try! NSRegularExpression(pattern: "([MLQTCSAZVH])([^MLQTCSAZVH]*)", options: [.caseInsensitive])
-		private static let separatorCharacters: CharacterSet = {
-			var set = CharacterSet.whitespacesAndNewlines
-			set.insert(",")
-			return set
-		}()
+		
 		static func parse(_ value: String) throws -> [Definition] {
 			var definitions: [SVGPath.Definition] = []
 			
