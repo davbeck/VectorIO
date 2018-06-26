@@ -308,7 +308,7 @@ extension SVGParser: XMLParserDelegate {
 		for (name, value) in attributes {
 			switch name {
 			case "d":
-				element.definitions = try SVGPath.Definition.parse(value)
+				element.definitions = try SVGPathDefinitionParser(value).parse()
 			default:
 				try parseElementAttribute(name: name, value: value, for: &element)
 			}

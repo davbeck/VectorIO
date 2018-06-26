@@ -344,66 +344,6 @@ class SVGParserTests: XCTestCase {
 		XCTAssertEqual(element.style, CSSStyle.defaults)
 	}
 	
-	func testParseQuadraticBezierCurve() throws {
-		let data = """
-		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-		<path fill="none" stroke="red"
-		d="M 10,50
-		   Q 25,25 40,50
-		   T 70,50" />
-		</svg>
-		""".data(using: .utf8)!
-		
-		let svg = try SVGParser(data: data).parse()
-		
-		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
-		XCTAssertEqual(element.definitions, [
-			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 50)),
-			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 25, y: 25), end: CGPoint(x: 40, y: 50)),
-			SVGPath.Definition.quadraticBezierCurve(control: CGPoint(x: 55, y: 75), end: CGPoint(x: 70, y: 50)),
-		])
-		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor.clear,
-			fillOpacity: 1,
-			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 1,
-			strokeOpacity: 1,
-			opacity: 1,
-			fillRule: .evenOdd
-		))
-	}
-	
-	func testParseCubicBezierCurve() throws {
-		let data = """
-		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-		<path fill="none" stroke="red"
-		d="M 10,90
-		   C 30,90 30,10 50,10
-		   S 70,90 90,90" />
-		</svg>
-		""".data(using: .utf8)!
-		
-		let svg = try SVGParser(data: data).parse()
-		
-		XCTAssertEqual(svg.children.count, 1)
-		guard let element = svg.children.first as? SVGPath else { XCTFail(); return }
-		XCTAssertEqual(element.definitions, [
-			SVGPath.Definition.moveTo(CGPoint(x: 10, y: 90)),
-			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 30, y: 90), controlEnd: CGPoint(x: 30, y: 10), end: CGPoint(x: 50, y: 10)),
-			SVGPath.Definition.cubicBezierCurve(controlStart: CGPoint(x: 70, y: 10), controlEnd: CGPoint(x: 70, y: 90), end: CGPoint(x: 90, y: 90)),
-		])
-		XCTAssertEqual(element.style, CSSStyle(
-			fill: CGColor.clear,
-			fillOpacity: 1,
-			stroke: CGColor(red: 1, green: 0, blue: 0, alpha: 1),
-			strokeWidth: 1,
-			strokeOpacity: 1,
-			opacity: 1,
-			fillRule: .evenOdd
-		))
-	}
-	
 	
 	// MARK: - Groups
 	
