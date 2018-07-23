@@ -558,4 +558,28 @@ class SVGParserTests: XCTestCase {
 		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
 		XCTAssertEqual(element.children.count, 2)
 	}
+	
+	func testCloud() throws {
+		let data = """
+		<?xml version="1.0" encoding="UTF-8"?>
+		<svg width="45px" height="30px" viewBox="0 0 45 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+			<title>login-cloud1</title>
+			<desc>Created with Sketch.</desc>
+			<defs></defs>
+			<g id="login-cloud1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.4">
+				<circle id="Oval-Copy-6" fill="#FFFFFF" fill-rule="nonzero" cx="15" cy="15" r="15"></circle>
+				<circle id="Oval-Copy-7" fill="#FFFFFF" fill-rule="nonzero" cx="34" cy="19" r="11"></circle>
+			</g>
+		</svg>
+		""".data(using: .utf8)!
+		
+		let svg = try SVGParser(data: data).parse()
+		
+		XCTAssertEqual(svg.children.count, 1)
+		guard let element = svg.children.first as? SVGGroup else { XCTFail(); return }
+		XCTAssertEqual(element.children.count, 2)
+		
+		XCTAssertEqual(element.children[0].style.opacity, 0.4)
+	}
 }

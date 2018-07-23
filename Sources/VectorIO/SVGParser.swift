@@ -155,6 +155,9 @@ extension SVGParser: XMLParserDelegate {
 		case "fill-rule":
 			element.style = CSSStyle(fillRule: FillRule(rawValue: value))
 				.merging(element.style)
+		case "opacity":
+			element.style = try CSSStyle(opacity: CGFloat.parse(value))
+				.merging(element.style)
 			
 		case "style":
 			try element.style.merge(CSSStyle(definition: value))

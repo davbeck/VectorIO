@@ -34,11 +34,11 @@ extension CSSStyle {
 		
 		"""
 		if hasFill, let fill = self.fill {
-			let uiColor = try fill.swiftUIColorDefinition(alpha: fillOpacity ?? 1)
+			let uiColor = try fill.swiftUIColorDefinition(alpha: (fillOpacity ?? 1) * (opacity ?? 1))
 			code += "\t\(uiColor).setFill()\n"
 		}
 		if hasStroke, let stroke = self.stroke {
-			let uiColor = try stroke.swiftUIColorDefinition(alpha: strokeOpacity ?? 1)
+			let uiColor = try stroke.swiftUIColorDefinition(alpha: (strokeOpacity ?? 1) * (opacity ?? 1))
 			code += "\t\(uiColor).setStroke()\n"
 		}
 		code += "}"
